@@ -1,0 +1,53 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .hero {
+    background: url('https://www.moneydigest.com/img/gallery/how-to-tell-if-your-old-yu-gi-oh-cards-are-worth-any-money/intro-1731360868.jpg') center center / cover no-repeat;
+    color: white;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 8px #000;
+  }
+
+  .hero p {
+    font-size: 1.25rem;
+    text-shadow: 1px 1px 5px #000;
+  }
+
+  .section-title {
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+
+  .card-img-top {
+    height: 250px;
+    object-fit: cover;
+  }
+
+  footer {
+    background-color: #222;
+    color: #ccc;
+    padding: 2rem 0;
+  }
+
+  footer a {
+    color: #ccc;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }

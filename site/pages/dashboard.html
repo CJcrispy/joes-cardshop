@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joe's Card Shop Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #111;
+      color: #f8f9fa;
+    }
+    .glitch-text {
+      animation: glitch 1s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 1px 0 red; }
+      20% { text-shadow: -1px 0 cyan; }
+      40% { text-shadow: 2px 0 lime; }
+      60% { text-shadow: -2px 0 magenta; }
+      80% { text-shadow: 1px 0 blue; }
+      100% { text-shadow: none; }
+    }
+    .card-style {
+      background-color: #222;
+      border: 1px solid #444;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Joe's Card Shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#">Card Catalog</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+        <li class="nav-item"><a class="nav-link text-warning" href="#">Mystery Booster</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <h1 class="text-center glitch-text">Welcome, Joe</h1>
+  <p class="text-center">System status: <span class="text-danger">Unstable</span></p>
+
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class="card card-style p-3">
+        <h4>Inventory Management</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item bg-dark text-white">Booster Box – $89.99</li>
+          <li class="list-group-item bg-dark text-white">[DATA CORRUPTED] – $?.??</li>
+          <li class="list-group-item bg-dark text-white">Eternal Mulligan – ???</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-style text-center p-4">
+        <h4>Mystery Booster</h4>
+        <p class="text-muted">Receive cards not found in any known set...</p>
+        <button class="btn btn-warning">Open Booster</button>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-style p-3">
+        <h4>Backroom Logs</h4>
+        <p><em>Access locked. Unlock by opening mystery boosters.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
