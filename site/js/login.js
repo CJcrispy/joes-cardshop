@@ -7,7 +7,7 @@ function attemptLogin() {
 
   if (user === 'joe_test' && pass === 'dealerpass') {
     localStorage.setItem('joe_logged_in', 'true');
-    document.getElementById('login-screen').style.display = 'none';
+    // document.getElementById('login-screen').style.display = 'none';
     startARG();
   } else {
     alert("Access Denied.");
@@ -16,15 +16,13 @@ function attemptLogin() {
 
 function checkLogin() {
   if (localStorage.getItem('joe_logged_in') === 'true') {
-    document.getElementById('login-screen').style.display = 'none';
-    startARG();
-  } else {
-    document.getElementById('login-screen').style.display = 'flex';
-  }
+    // document.getElementById('login-screen').style.display = 'none';
+  } 
 }
 
 function startARG() {
   console.log("%c[ARG Triggered] Welcome back, Joe.", "color: red; font-size: 16px;");
+  window.location.href = "dashboard.html";
   // Additional ARG logic can go here.
   // e.g., unlock new elements, spawn puzzles, etc.
 }

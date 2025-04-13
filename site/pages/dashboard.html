@@ -4,79 +4,187 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Joe's Card Shop Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp">
   <style>
     body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d0d0d;
+      color: #e0e0e0;
+    }
+    .navbar {
+      background-color: #1a1a1a;
+      border-bottom: 1px solid #444;
+    }
+    .sidebar {
+      min-height: 100vh;
       background-color: #111;
-      color: #f8f9fa;
+      padding-top: 1rem;
+      border-right: 1px solid #333;
     }
-    .glitch-text {
-      animation: glitch 1s infinite;
+    .sidebar a {
+      color: #bbb;
+      padding: 0.75rem 1rem;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
-    @keyframes glitch {
-      0% { text-shadow: 1px 0 red; }
-      20% { text-shadow: -1px 0 cyan; }
-      40% { text-shadow: 2px 0 lime; }
-      60% { text-shadow: -2px 0 magenta; }
-      80% { text-shadow: 1px 0 blue; }
-      100% { text-shadow: none; }
-    }
-    .card-style {
+    .sidebar a:hover, .sidebar a.active {
       background-color: #222;
-      border: 1px solid #444;
+      color: #e91e63;
+    }
+    .sidebar a .material-symbols-sharp {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+    .content {
+      padding: 2rem;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .card {
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #333;
+    }
+    .list-group-item {
+      background-color: #191919;
+      border: 1px solid #333;
+      color: #ccc;
+    }
+    .list-group-item:hover {
+      background-color: #2a2a2a;
+    }
+    h1, h5 {
+      color: #e91e63;
+    }
+
+    @media (max-width: 767.98px) {
+      .sidebar {
+        display: none;
+      }
+      #dashboardMenu {
+        display: block;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html">Joe's Card Shop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item"><a class="nav-link" href="card-catalog.html">Card Catalog</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+            </ul>
+            <ul class="navbar-nav d-lg-none" id="dashboardMenu">
+              <li class="nav-item"><a class="nav-link" onclick="switchSection('inventory')">Inventory</a></li>
+              <li class="nav-item"><a class="nav-link" onclick="switchSection('binder')">Binder</a></li>
+              <li class="nav-item"><a class="nav-link" onclick="switchSection('messages')">Messages</a></li>
+              <li class="nav-item"><a class="nav-link" onclick="switchSection('booster')">Booster</a></li>
+            </ul>
+        </div>
+    </div>
+  </nav>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Joe's Card Shop</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#">Card Catalog</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
-        <li class="nav-item"><a class="nav-link text-warning" href="#">Mystery Booster</a></li>
-      </ul>
+    <div class="row">
+      <nav class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+        <a class="active" onclick="switchSection('inventory')">
+          <span class="material-symbols-sharp">inventory_2</span> Inventory Management
+        </a>
+        <a onclick="switchSection('binder')">
+          <span class="material-symbols-sharp">collections_bookmark</span> Card Binder
+        </a>
+        <a onclick="switchSection('messages')">
+          <span class="material-symbols-sharp">mail</span> Messages
+        </a>
+        <a onclick="switchSection('booster')">
+          <span class="material-symbols-sharp">auto_awesome</span> Mystery Booster
+        </a>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+        <div id="inventory" class="section active">
+          <h1 class="mb-4">Inventory Management</h1>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title">Inventory Items</h5>
+                  <p class="card-text">325 cards in stock</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="binder" class="section">
+          <h1 class="mb-4">Card Binder</h1>
+          <p>You have 58 binders created.</p>
+        </div>
+
+        <div id="messages" class="section">
+          <h1 class="mb-4">Messages</h1>
+          <p>12 unread messages.</p>
+        </div>
+
+        <div id="booster" class="section">
+          <h1 class="mb-4">Mystery Booster</h1>
+          <ul class="list-group">
+            <li class="list-group-item">Booster Pack #001 - Unopened</li>
+            <li class="list-group-item">Booster Pack #002 - Contains rare foil</li>
+            <li class="list-group-item">Booster Pack #003 - Opened</li>
+          </ul>
+        </div>
+      </main>
     </div>
   </div>
-</nav>
 
-<div class="container py-5">
-  <h1 class="text-center glitch-text">Welcome, Joe</h1>
-  <p class="text-center">System status: <span class="text-danger">Unstable</span></p>
+  <script>
+    
+    function switchSection(id) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
 
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <div class="card card-style p-3">
-        <h4>Inventory Management</h4>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item bg-dark text-white">Booster Box – $89.99</li>
-          <li class="list-group-item bg-dark text-white">[DATA CORRUPTED] – $?.??</li>
-          <li class="list-group-item bg-dark text-white">Eternal Mulligan – ???</li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-style text-center p-4">
-        <h4>Mystery Booster</h4>
-        <p class="text-muted">Receive cards not found in any known set...</p>
-        <button class="btn btn-warning">Open Booster</button>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-style p-3">
-        <h4>Backroom Logs</h4>
-        <p><em>Access locked. Unlock by opening mystery boosters.</em></p>
-      </div>
-    </div>
-  </div>
-</div>
+      document.querySelectorAll('.sidebar a, .navbar-nav .nav-link').forEach(link => link.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    function swapNavbarLink() {
+      const loginLink = document.querySelector('a.nav-link[href="login.html"]');
+      if (loginLink) {
+        loginLink.textContent = 'Dashboard';
+        loginLink.href = 'dashboard.html';
+      }
+    }
+
+    function checkLogin() {
+      if (localStorage.getItem('joe_logged_in') === 'true') {
+        swapNavbarLink();
+        // Optional: Hide login screen if needed
+        // document.getElementById('login-screen').style.display = 'none';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkLogin();
+    });
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ARG JS -->
+  <script src="./js/arg.js"></script>
 </body>
 </html>

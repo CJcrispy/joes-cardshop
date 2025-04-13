@@ -1,89 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Me – Joe's Card Shop</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joe's Card Shop Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp">
   <style>
-    body, html {
-      height: 100%;
-      margin: 0;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d0d0d;
+      color: #e0e0e0;
     }
-
-    /* Container Styling */
-    .about-container {
-      padding: 60px 0;
+    .navbar {
+      background-color: #1a1a1a;
+      border-bottom: 1px solid #444;
     }
-
-    /* Text Styling */
-    .about-heading {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 20px;
+    .sidebar {
+      min-height: 100vh;
+      background-color: #111;
+      padding-top: 1rem;
+      border-right: 1px solid #333;
     }
-
-    .about-text {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
+    .sidebar a {
+      color: #bbb;
+      padding: 0.75rem 1rem;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
-
-    /* Profile Image Styling */
-    .profile-img {
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 50%;
-      box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
-      margin-bottom: 20px;
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #222;
+      color: #e91e63;
+    }
+    .sidebar a .material-symbols-sharp {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+    .content {
+      padding: 2rem;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .card {
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #333;
+    }
+    .list-group-item {
+      background-color: #191919;
+      border: 1px solid #333;
+      color: #ccc;
+    }
+    .list-group-item:hover {
+      background-color: #2a2a2a;
+    }
+    h1, h5 {
+      color: #e91e63;
     }
   </style>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <nav class="navbar navbar-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Joe's Card Shop</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Card Catalog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Cart</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
-          </li>
-        </ul>
-      </div>
     </div>
   </nav>
 
-  <!-- About Me Page Content -->
-  <div class="about-container">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-8">
-          <div class="text-center">
-            <img src="https://via.placeholder.com/250" alt="Joe" class="profile-img" />
-            <h1 class="about-heading">About Joe</h1>
-            <p class="about-text">Hello, I'm Joe, the owner of Joe's Card Shop. I've been collecting trading cards for as long as I can remember, and I'm passionate about sharing my collection with fellow enthusiasts. At Joe's Card Shop, we offer a wide range of rare and valuable trading cards for collectors of all ages. Whether you're just starting your collection or looking for that elusive card to complete it, you'll find it here.</p>
-            <p class="about-text">My mission is to create a welcoming space where card lovers can find high-quality cards, meet other collectors, and be part of a passionate community. I also offer a variety of services such as card grading, buy/sell/trade options, and advice on building your collection.</p>
-            <p class="about-text">Thank you for visiting, and I hope you find something special in our catalog. Feel free to reach out with any questions!</p>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-3 col-lg-2 sidebar">
+        <a class="active" onclick="switchSection('inventory')">
+          <span class="material-symbols-sharp">inventory_2</span> Inventory Management
+        </a>
+        <a onclick="switchSection('binder')">
+          <span class="material-symbols-sharp">collections_bookmark</span> Card Binder
+        </a>
+        <a onclick="switchSection('messages')">
+          <span class="material-symbols-sharp">mail</span> Messages
+        </a>
+        <a onclick="switchSection('booster')">
+          <span class="material-symbols-sharp">auto_awesome</span> Mystery Booster
+        </a>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+        <div id="inventory" class="section active">
+          <h1 class="mb-4">Inventory Management</h1>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title">Inventory Items</h5>
+                  <p class="card-text">325 cards in stock</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div id="binder" class="section">
+          <h1 class="mb-4">Card Binder</h1>
+          <p>You have 58 binders created.</p>
+        </div>
+
+        <div id="messages" class="section">
+          <h1 class="mb-4">Messages</h1>
+          <p>12 unread messages.</p>
+        </div>
+
+        <div id="booster" class="section">
+          <h1 class="mb-4">Mystery Booster</h1>
+          <ul class="list-group">
+            <li class="list-group-item">Booster Pack #001 - Unopened</li>
+            <li class="list-group-item">Booster Pack #002 - Contains rare foil</li>
+            <li class="list-group-item">Booster Pack #003 - Opened</li>
+          </ul>
+        </div>
+      </main>
     </div>
   </div>
 
+  <script>
+    function switchSection(id) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
