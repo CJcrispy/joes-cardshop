@@ -1,0 +1,70 @@
+body, html {
+    height: 100%;
+    margin: 0;
+  }
+
+  /* Background image container */
+  .bg-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('https://i.ebayimg.com/images/g/uhkAAOSwFWJfkaP~/s-l1200.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(6px);
+    z-index: -1;
+  }
+
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+  }
+
+  .card {
+    max-width: 400px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* semi-transparent for contrast */
+    border: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .card-header {
+    background-color: #343a40;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: none;
+  }
+
+  .btn-primary {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+  }
+
+  .btn-primary:hover {
+    background-color: #1a252f;
+    border-color: #1a252f;
+  }
+
+  .form-check-label {
+    font-size: 0.9rem;
+  }
+
+  .small-text {
+    font-size: 0.875rem;
+  }
+
+  /* Navbar styling */
+  .navbar {
+    z-index: 100;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }

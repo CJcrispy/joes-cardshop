@@ -47,6 +47,18 @@
     .section.active {
       display: block;
     }
+
+    #inventory .card {
+      transition: 0.2s ease;
+    }
+    #inventory .card:hover {
+      box-shadow: 0 0 8px rgba(255, 0, 128, 0.3);
+      color: #fff;
+      background-color: #222;
+    }
+
+
+
     .card {
       background-color: #1e1e1e;
       color: #fff;
@@ -118,22 +130,62 @@
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
         <div id="inventory" class="section active">
           <h1 class="mb-4">Inventory Management</h1>
-          <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title">Inventory Items</h5>
-                  <p class="card-text">325 cards in stock</p>
-                </div>
+        
+          <!-- Fake Search Bar -->
+          <div class="input-group mb-4">
+            <input type="text" class="form-control" id="inventory-answer" placeholder="Search inventory...">
+            <button class="btn btn-outline-danger" onclick="submitInventoryPuzzle()">Search</button>
+          </div>
+        
+          <!-- System Glitch Note -->
+          <div class="text-muted small mb-4">
+            System Notice: Search query [REDACTED] is unreadable. Expected input: decoded 4-letter string.<br>
+            Hint: Sometimes hex hides letters in plain sight...
+          </div>
+          
+
+          <!-- Fake Inventory Cards -->
+          <div class="row g-3">
+            <div class="col-6 col-md-3">
+              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+                <span style="font-size: 0.9rem;">E4</span>
               </div>
             </div>
+            <div class="col-6 col-md-3">
+              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+                <span style="font-size: 0.9rem;">D9</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+                <span style="font-size: 0.9rem;">A1</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+                <span style="font-size: 0.9rem;">C3</span>
+              </div>
+            </div>
+            <!-- Add more as needed... -->
           </div>
+
         </div>
+        
+        
+        
 
         <div id="binder" class="section">
           <h1 class="mb-4">Card Binder</h1>
-          <p>You have 58 binders created.</p>
+          <p class="text-muted">Corrupted Set – Cult of E (13 total)</p>
+        
+          <div id="card-binder-grid" class="row g-3"></div>
+        
+          <div class="d-flex justify-content-center mt-4">
+            <button class="btn btn-outline-light me-2" id="binder-prev" disabled>&laquo; Prev</button>
+            <button class="btn btn-outline-light" id="binder-next">&raquo; Next</button>
+          </div>
         </div>
+        
 
         <div id="messages" class="section">
           <h1 class="mb-4">Messages</h1>
@@ -152,39 +204,17 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/arg.js"></script>
   <script>
-    
-    function switchSection(id) {
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-
-      document.querySelectorAll('.sidebar a, .navbar-nav .nav-link').forEach(link => link.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-    }
-
-    function swapNavbarLink() {
-      const loginLink = document.querySelector('a.nav-link[href="login.html"]');
-      if (loginLink) {
-        loginLink.textContent = 'Dashboard';
-        loginLink.href = 'dashboard.html';
+    window.onload = () => {
+      // Check if the user is logged in, if not, redirect to login page
+      if (localStorage.getItem('joe_logged_in') !== 'true') {
+        window.location.href = './login.html';
       }
-    }
-
-    function checkLogin() {
-      if (localStorage.getItem('joe_logged_in') === 'true') {
-        swapNavbarLink();
-        // Optional: Hide login screen if needed
-        // document.getElementById('login-screen').style.display = 'none';
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      checkLogin();
-    });
+    };
 
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- ARG JS -->
-  <script src="./js/arg.js"></script>
 </body>
 </html>

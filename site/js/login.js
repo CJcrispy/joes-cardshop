@@ -1,31 +1,25 @@
-// Show Joe's credentials in the console (ARG-style)
 console.log("// TODO: Hide the test account login. joe_test: dealerpass");
-  
-function attemptLogin() {
+
+function attemptLogin(event) {
   const user = document.getElementById('username').value;
   const pass = document.getElementById('password').value;
 
   if (user === 'joe_test' && pass === 'dealerpass') {
+    // Set session and local storage
     localStorage.setItem('joe_logged_in', 'true');
-    // document.getElementById('login-screen').style.display = 'none';
-    startARG();
+    sessionStorage.setItem('joe_session_active', 'true');
+
+    // Show Welcome Modal using Bootstrap Modal
+    const welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+    welcomeModal.show();
+
+    // Redirect to home page after 4 seconds
+    setTimeout(function() {
+      window.location.href = "../index.html"; // Redirect to home page after 4 seconds
+    }, 4000);
   } else {
-    alert("Access Denied.");
+    // Show Access Denied Modal using Bootstrap Modal
+    const accessDeniedModal = new bootstrap.Modal(document.getElementById('accessDeniedModal'));
+    accessDeniedModal.show();
   }
 }
-
-function checkLogin() {
-  if (localStorage.getItem('joe_logged_in') === 'true') {
-    // document.getElementById('login-screen').style.display = 'none';
-  } 
-}
-
-function startARG() {
-  console.log("%c[ARG Triggered] Welcome back, Joe.", "color: red; font-size: 16px;");
-  window.location.href = "dashboard.html";
-  // Additional ARG logic can go here.
-  // e.g., unlock new elements, spawn puzzles, etc.
-}
-
-// Initial check on page load
-window.onload = checkLogin;

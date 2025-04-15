@@ -3,29 +3,118 @@
 // =====================
 
 // Initialize login state and navbar
-function checkLogin() {
+// Reset progress if user has never visited before
+function initFirstVisit() {
+  if (!localStorage.getItem('joe_has_visited')) {
+    localStorage.clear(); // Clear everything including login
+    localStorage.setItem('joe_has_visited', 'true');
+    console.log("[ARG] First visit detected. LocalStorage reset.");
+  }
+}
+
+// Detect if user left the site and came back — reset if so
+function detectLeaveSite() {
+  if (!sessionStorage.getItem('joe_session_active')) {
     if (localStorage.getItem('joe_logged_in') === 'true') {
-      const navItems = document.querySelectorAll('.navbar-nav');
-      navItems.forEach(nav => {
-        const loginItem = nav.querySelector('a[href="login.html"]');
-        if (loginItem) {
-          loginItem.textContent = 'Dashboard';
-          loginItem.setAttribute('href', 'dashboard.html');
+      console.log("[ARG] Session expired, but login is active. Skipping reset.");
+      sessionStorage.setItem('joe_session_active', 'true');
+      return;
+    }
+
+    console.log("[ARG] Session expired. Resetting progress.");
+    localStorage.clear();
+    localStorage.setItem('joe_has_visited', 'true'); // Prevent loop
+  }
+
+  sessionStorage.setItem('joe_session_active', 'true');
+
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.removeItem('joe_session_active');
+  });
+}
+
+
+function isLoginPage() {
+  return window.location.pathname.includes("login.html");
+}
+
+
+// Run all checks on load
+window.onload = () => {
+  if (!isLoginPage()) {
+    initFirstVisit();
+    detectLeaveSite();
+    checkLogin();
+  }
+};
+
+function checkLogin() {
+  const isLoggedIn = localStorage.getItem('joe_logged_in') === 'true';
+  const navList = document.querySelector('.navbar-nav');
+  if (!navList) return;
+
+  const loginItem = navList.querySelector('a[href$="login.html"]');
+  const existingLogout = navList.querySelector('#logout-link');
+
+  if (isLoggedIn) {
+    // Change "Login" to "Dashboard"
+    if (loginItem) {
+      const isOnIndex = window.location.pathname.endsWith("index.html") || window.location.pathname === "/";
+    
+      loginItem.textContent = 'Dashboard';
+      loginItem.setAttribute('href', isOnIndex ? './pages/dashboard.html' : 'dashboard.html');
+    }
+    
+
+    // Add "Logout" if not already there
+    if (!existingLogout) {
+      const logoutLi = document.createElement('li');
+      logoutLi.className = 'nav-item';
+
+      const logoutLink = document.createElement('a');
+      logoutLink.className = 'nav-link text-danger';
+      logoutLink.href = '#';
+      logoutLink.id = 'logout-link';
+      logoutLink.textContent = 'Logout';
+
+      logoutLink.addEventListener('click', () => {
+        localStorage.removeItem('joe_logged_in');
+        localStorage.removeItem('joe_has_visited');
+        localStorage.removeItem('joe_progress');
+        sessionStorage.removeItem('joe_session_active');
+
+        const currentPath = window.location.pathname;
+        if (currentPath.includes("dashboard")) {
+          window.location.href = "../index.html";
+        } else {
+          window.location.reload();
         }
       });
+
+      logoutLi.appendChild(logoutLink);
+      navList.appendChild(logoutLi);
     }
   }
-  
+}
+
+ 
   // Check which page the player is on
   function checkCurrentPage() {
     const path = window.location.pathname;
   
     if (path.endsWith("index.html") || path === "/" || path === "/index") {
-      runIndexPuzzleSetup(); // call your index-specific changes here
+      const progress = getProgress();
+      const isLoggedIn = localStorage.getItem('joe_logged_in') === 'true';
+  
+      // Only run ARG corruption if player is Joe OR puzzle is complete
+      if (isLoggedIn || progress.puzzlesCompleted.indexPuzzle) {
+        runIndexPuzzleSetup();
+      }
     }
   
-    // other page conditions here...
+    // ... add more pages as needed
   }
+  
   
   
   // ==========================
@@ -151,6 +240,110 @@ function runIndexPuzzleSetup() {
     cards[2].querySelector("h5").innerHTML = "E̶̪͋N̴͗ͅT̷̯͒Ḛ̵̚R̶̞̉";
     cards[2].querySelector("p").innerHTML = "S̻͟ò̢m̺̀e̚͢ ̴̯g̷̹a̡͕t͏͍e̼͡s͈͝ ̴̜m̡͡u̷̯s̤͡t͔͝ ͙͞b̖͜e̡͇ ̨̗w̛̳a̵͖l̷̥k̴͕e̡͢d̷͕.̷̨.̸.̶";
   }
+
+// ==========================
+// BINDER VIEW (Dashboard)
+// ==========================
+
+const corruptedCardImages = {
+  "The Dealer": "../images/corrupted_cards/dealer_01.png",
+  "Cold Pull": "../images/corrupted_cards/coldPull_02.png",
+  "Cult of E Initiation": "../images/corrupted_cards/invite_03.png",
+  "Shuffle the Self": "../images/corrupted_cards/shuffle_04.png",
+  "The Mulligan Curse": "../images/corrupted_cards/mulligan_05.png",
+  "Deck of the Damned": "../images/corrupted_cards/damned_06.png",
+  "Side Deck Ritual": "../images/corrupted_cards/sideDeck_07.png",
+  "Game Loss (Unexplained)": "../images/corrupted_cards/loss_08.png",
+  "Decklist of Flesh": "../images/corrupted_cards/flesh_09.png",
+  "Draw Phase (Endless)": "../images/corrupted_cards/draw_10.png",
+  "Exodia, the Forbidden Truth": "../images/corrupted_cards/exodia_11.png",
+  "Dealer’s Choice": "../images/corrupted_cards/choice_12.png",
+  "The Empty Sleeve": "../images/corrupted_cards/sleeve_13.png"
+};
+
+const placeholderImage = "../images/placeholder.png";
+let currentBinderPage = 0;
+const cardsPerPage = 6;
+
+function renderBinderPage() {
+  const allCards = Object.keys(corruptedCardImages);
+  const collected = getCorruptedCards();
+  const grid = document.getElementById("card-binder-grid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  const start = currentBinderPage * cardsPerPage;
+  const pageCards = allCards.slice(start, start + cardsPerPage);
+
+  pageCards.forEach(name => {
+    const col = document.createElement("div");
+    col.className = "col-6 col-md-4 col-lg-2 text-center";
+
+    const img = document.createElement("img");
+    img.src = collected.includes(name) ? corruptedCardImages[name] : placeholderImage;
+    img.alt = name;
+    img.className = "img-fluid rounded mb-2";
+
+    const label = document.createElement("div");
+    label.textContent = collected.includes(name) ? name : "???";
+    label.className = "text-muted small";
+
+    col.appendChild(img);
+    col.appendChild(label);
+    grid.appendChild(col);
+  });
+
+  document.getElementById("binder-prev").disabled = currentBinderPage === 0;
+  document.getElementById("binder-next").disabled = start + cardsPerPage >= allCards.length;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const binderPrev = document.getElementById("binder-prev");
+  const binderNext = document.getElementById("binder-next");
+
+  if (binderPrev && binderNext) {
+    binderPrev.addEventListener("click", () => {
+      currentBinderPage--;
+      renderBinderPage();
+    });
+    binderNext.addEventListener("click", () => {
+      currentBinderPage++;
+      renderBinderPage();
+    });
+  }
+});
+
+
+
+// ==========================
+// DASHBOARD.html
+// ==========================
+console.log("%cHint: Try using ASCII values.", "color: #999; font-style: italic;");
+
+function setupInventoryPuzzle() {
+  const puzzleKey = "dashboardPuzzle";
+  if (isPuzzleComplete(puzzleKey)) {
+    document.getElementById("inventory-answer").placeholder = "Booster already unlocked.";
+    return;
+  }
+}
+
+function submitInventoryPuzzle() {
+  const input = document.getElementById("inventory-answer").value.trim().toUpperCase();
+  const puzzleKey = "dashboardPuzzle";
+
+  if (input === "FEAR") {
+    markPuzzleComplete(puzzleKey);
+    alert("✅ Booster unlocked. The cards shimmer slightly...");
+    document.getElementById("inventory-answer").placeholder = "Code accepted.";
+    document.getElementById("inventory-answer").value = "";
+  } else {
+    alert("❌ Invalid query string. Try again.");
+  }
+}
+
+
   
   
   // ==========================
