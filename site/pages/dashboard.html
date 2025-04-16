@@ -84,6 +84,38 @@
         display: block;
       }
     }
+
+    .accordion-item.bg-dark {
+      background-color: #121212;
+      border: 1px solid #333;
+      border-radius: 0.4rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+    .accordion-button {
+      background-color: #1a1a1a;
+      color: #e91e63;
+      font-weight: bold;
+      font-family: monospace;
+    }
+    .accordion-button.collapsed {
+      background-color: #1a1a1a;
+      color: #ccc;
+    }
+    .accordion-body {
+      background-color: #1e1e1e;
+      border-top: 1px solid #333;
+      color: #f8f8f8;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.95rem;
+      white-space: pre-line;
+      animation: glitch-fade 0.3s ease-in-out;
+    }
+    @keyframes glitch-fade {
+      0% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+
   </style>
 </head>
 <body>
@@ -138,7 +170,7 @@
           </div>
         
           <!-- System Glitch Note -->
-          <div class="text-muted small mb-4">
+          <div class="light small mb-4">
             System Notice: Search query [REDACTED] is unreadable. Expected input: decoded 4-letter string.<br>
             Hint: Sometimes hex hides letters in plain sight...
           </div>
@@ -147,22 +179,22 @@
           <!-- Fake Inventory Cards -->
           <div class="row g-3">
             <div class="col-6 col-md-3">
-              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+              <div class="card bg-dark border-secondary light d-flex align-items-center justify-content-center" style="height: 150px;">
                 <span style="font-size: 0.9rem;">E4</span>
               </div>
             </div>
             <div class="col-6 col-md-3">
-              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+              <div class="card bg-dark border-secondary light d-flex align-items-center justify-content-center" style="height: 150px;">
                 <span style="font-size: 0.9rem;">D9</span>
               </div>
             </div>
             <div class="col-6 col-md-3">
-              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+              <div class="card bg-dark border-secondary light d-flex align-items-center justify-content-center" style="height: 150px;">
                 <span style="font-size: 0.9rem;">A1</span>
               </div>
             </div>
             <div class="col-6 col-md-3">
-              <div class="card bg-dark border-secondary text-muted d-flex align-items-center justify-content-center" style="height: 150px;">
+              <div class="card bg-dark border-secondary light d-flex align-items-center justify-content-center" style="height: 150px;">
                 <span style="font-size: 0.9rem;">C3</span>
               </div>
             </div>
@@ -176,7 +208,7 @@
 
         <div id="binder" class="section">
           <h1 class="mb-4">Card Binder</h1>
-          <p class="text-muted">Corrupted Set – Cult of E (13 total)</p>
+          <p class="light">Corrupted Set – Cult of E (13 total)</p>
         
           <div id="card-binder-grid" class="row g-3"></div>
         
@@ -188,17 +220,13 @@
         
 
         <div id="messages" class="section">
-          <h1 class="mb-4">Messages</h1>
-          <p>12 unread messages.</p>
+          <h1 class="mb-4">Messages from Joe</h1>
+          <div class="accordion accordion-flush" id="message-list"></div>
         </div>
 
         <div id="booster" class="section">
           <h1 class="mb-4">Mystery Booster</h1>
-          <ul class="list-group">
-            <li class="list-group-item">Booster Pack #001 - Unopened</li>
-            <li class="list-group-item">Booster Pack #002 - Contains rare foil</li>
-            <li class="list-group-item">Booster Pack #003 - Opened</li>
-          </ul>
+
         </div>
       </main>
     </div>

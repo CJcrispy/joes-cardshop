@@ -9,6 +9,8 @@ function switchSection(id) {
     if (id === "binder" && typeof renderBinderPage === "function") {
       renderBinderPage();
     }
+    if (id === 'messages') renderMessages();
+    if (id === 'booster') runBoosterPage();
   }
   
 

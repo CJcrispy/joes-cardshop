@@ -98,82 +98,91 @@ function checkLogin() {
 }
 
  
-  // Check which page the player is on
-  function checkCurrentPage() {
-    const path = window.location.pathname;
+// Check which page the player is on
+function checkCurrentPage() {
+  const path = window.location.pathname;
+  const progress = getProgress();
+  const isLoggedIn = localStorage.getItem('joe_logged_in') === 'true';
+
+  if (path.endsWith("index.html") || path === "/" || path === "/index") {
+    // Only run ARG corruption if player is Joe OR puzzle is complete
+    if (isLoggedIn || progress.puzzlesCompleted.indexPuzzle) {
+      runIndexPuzzleSetup();
+    } 
+  } else if (path.includes("about")) {
+    if (isLoggedIn || progress.puzzlesCompleted.aboutPagePuzzle) {
+      runAboutPagePuzzle();
+    } 
+  } else if (path.includes("card-catalog")) {
+    if (isLoggedIn || progress.puzzlesCompleted.catalogPuzzle) {
+      runCatalogPuzzle();
+    } 
+  } 
+
+
+
+  // ... add more pages as needed
+}
   
-    if (path.endsWith("index.html") || path === "/" || path === "/index") {
-      const progress = getProgress();
-      const isLoggedIn = localStorage.getItem('joe_logged_in') === 'true';
   
-      // Only run ARG corruption if player is Joe OR puzzle is complete
-      if (isLoggedIn || progress.puzzlesCompleted.indexPuzzle) {
-        runIndexPuzzleSetup();
-      }
-    }
   
-    // ... add more pages as needed
+// ==========================
+// ARG Progression System
+// ==========================
+
+function initProgression() {
+  if (!localStorage.getItem('joe_progress')) {
+    const defaultProgress = {
+      puzzlesCompleted: {
+        aboutPagePuzzle: false,
+        catalogPuzzle: false,
+        indexPuzzle: false,
+        dashboardPuzzle: false
+      },
+      boosterPacks: [],
+      corruptedCards: []
+    };
+    localStorage.setItem('joe_progress', JSON.stringify(defaultProgress));
   }
-  
-  
-  
-  // ==========================
-  // ARG Progression System
-  // ==========================
-  
-  function initProgression() {
-    if (!localStorage.getItem('joe_progress')) {
-      const defaultProgress = {
-        puzzlesCompleted: {
-          aboutPagePuzzle: false,
-          catalogPuzzle: false,
-          indexPuzzle: false,
-          dashboardPuzzle: false
-        },
-        boosterPacks: [],
-        corruptedCards: []
-      };
-      localStorage.setItem('joe_progress', JSON.stringify(defaultProgress));
-    }
+}
+
+function getProgress() {
+  return JSON.parse(localStorage.getItem('joe_progress'));
+}
+
+function saveProgress(progress) {
+  localStorage.setItem('joe_progress', JSON.stringify(progress));
+}
+
+function markPuzzleComplete(puzzleKey) {
+  const progress = getProgress();
+  if (!progress.puzzlesCompleted[puzzleKey]) {
+    progress.puzzlesCompleted[puzzleKey] = true;
+    const rewardNumber = Object.values(progress.puzzlesCompleted).filter(p => p).length;
+    progress.boosterPacks.push(`Booster #00${rewardNumber}`);
+    saveProgress(progress);
   }
-  
-  function getProgress() {
-    return JSON.parse(localStorage.getItem('joe_progress'));
+}
+
+function addCorruptedCard(cardCode) {
+  const progress = getProgress();
+  if (!progress.corruptedCards.includes(cardCode)) {
+    progress.corruptedCards.push(cardCode);
+    saveProgress(progress);
   }
-  
-  function saveProgress(progress) {
-    localStorage.setItem('joe_progress', JSON.stringify(progress));
-  }
-  
-  function markPuzzleComplete(puzzleKey) {
-    const progress = getProgress();
-    if (!progress.puzzlesCompleted[puzzleKey]) {
-      progress.puzzlesCompleted[puzzleKey] = true;
-      const rewardNumber = Object.values(progress.puzzlesCompleted).filter(p => p).length;
-      progress.boosterPacks.push(`Booster #00${rewardNumber}`);
-      saveProgress(progress);
-    }
-  }
-  
-  function addCorruptedCard(cardCode) {
-    const progress = getProgress();
-    if (!progress.corruptedCards.includes(cardCode)) {
-      progress.corruptedCards.push(cardCode);
-      saveProgress(progress);
-    }
-  }
-  
-  function isPuzzleComplete(puzzleKey) {
-    return getProgress().puzzlesCompleted[puzzleKey];
-  }
-  
-  function getUnlockedBoosters() {
-    return getProgress().boosterPacks;
-  }
-  
-  function getCorruptedCards() {
-    return getProgress().corruptedCards;
-  }
+}
+
+function isPuzzleComplete(puzzleKey) {
+  return getProgress().puzzlesCompleted[puzzleKey];
+}
+
+function getUnlockedBoosters() {
+  return getProgress().boosterPacks;
+}
+
+function getCorruptedCards() {
+  return getProgress().corruptedCards;
+}
 
 // ==========================
 // INDEX.html
@@ -239,7 +248,204 @@ function runIndexPuzzleSetup() {
     cards[2].querySelector("img").src = "https://img.freepik.com/premium-photo/dark-spooky-maze-with-unexpected-frights-around-corners_1314467-158517.jpg";
     cards[2].querySelector("h5").innerHTML = "E̶̪͋N̴͗ͅT̷̯͒Ḛ̵̚R̶̞̉";
     cards[2].querySelector("p").innerHTML = "S̻͟ò̢m̺̀e̚͢ ̴̯g̷̹a̡͕t͏͍e̼͡s͈͝ ̴̜m̡͡u̷̯s̤͡t͔͝ ͙͞b̖͜e̡͇ ̨̗w̛̳a̵͖l̷̥k̴͕e̡͢d̷͕.̷̨.̸.̶";
+}
+
+// ==========================
+// BOOSTER.html
+// ==========================
+
+let boosterModalShown = false;
+
+function runBoosterPage() {
+  const boosterSection = document.getElementById("booster");
+  if (!boosterSection) return;
+
+  document.body.classList.add("bg-dark", "text-light");
+
+  const boosterCount = getUnlockedBoosters().length;
+
+  const boosterList = document.createElement("div");
+  boosterList.innerHTML = `
+    <h5>You have <strong>${boosterCount}</strong> booster pack(s).</h5>
+    <div class="mb-3">
+      <button class="btn btn-outline-danger me-2" id="openOne" ${boosterCount === 0 ? "disabled" : ""}>Open One</button>
+      <button class="btn btn-outline-danger" id="openAll" ${boosterCount === 0 ? "disabled" : ""}>Open All</button>
+      <button class="btn btn-outline-light ms-3" id="flipCards" style="display: none;">Flip Cards</button>
+    </div>
+    <div id="openedCards" class="row g-4"></div>
+  `;
+
+  boosterSection.appendChild(boosterList);
+
+  document.getElementById("openOne").onclick = () => openBoosters(1);
+  document.getElementById("openAll").onclick = () => openBoosters(getUnlockedBoosters().length);
+  document.getElementById("flipCards").onclick = flipAllCards;
+}
+
+function openBoosters(count) {
+  const progress = getProgress();
+  const boosterContainer = document.getElementById("openedCards");
+  const opened = progress.boosterPacks.splice(0, count);
+
+  for (let i = 0; i < opened.length; i++) {
+    for (let j = 0; j < 3; j++) {
+      const card = document.createElement("div");
+      card.className = "col-6 col-sm-4 col-md-3 col-lg-2 text-center mb-4";
+      card.innerHTML = `
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="../images/placeholder.png" class="img-fluid rounded shadow" style="height:300px; object-fit:cover;" alt="Front" />
+            </div>
+            <div class="flip-card-back">
+              <img src="../images/corrupted_cards/#${Math.floor(Math.random()*13+1)}_dealer.png" class="img-fluid rounded shadow" style="height:300px; object-fit:cover;" alt="Back" />
+            </div>
+          </div>
+        </div>
+      `;
+      boosterContainer.appendChild(card);
+    }
   }
+
+  saveProgress(progress);
+  document.getElementById("flipCards").style.display = "inline-block";
+}
+
+function flipAllCards() {
+  const cards = document.querySelectorAll(".flip-card-inner");
+  cards.forEach(card => card.classList.toggle("flipped"));
+
+  setTimeout(showBoosterModal, 2000);
+}
+
+function flipAllCards() {
+  const cards = document.querySelectorAll(".flip-card-inner");
+  cards.forEach(card => card.classList.toggle("flipped"));
+
+  // Only show modal once
+  if (!boosterModalShown) {
+    boosterModalShown = true;
+    setTimeout(showBoosterModal, 2000);
+  }
+}
+
+
+// Add styles for flipping effect
+const style = document.createElement("style");
+style.innerHTML = `
+  .flip-card {
+    background-color: transparent;
+    perspective: 1000px;
+  }
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  .flip-card-inner.flipped {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+  .flip-card-back {
+    transform: rotateY(180deg);
+  }
+`;
+document.head.appendChild(style);
+
+
+// ==========================
+// MESSAGES UI (Dashboard)
+// ==========================
+
+function renderMessages() {
+  const messages = [
+    { id: 1, title: "Message 1", text: "I love this shop. Every morning I open the register, smell the booster packs, and think: 'This is it. My little kingdom.'" },
+    { id: 2, title: "Message 2", text: "A pack came in today that wasn’t from any set I’ve seen. No barcode. No branding. Just… foil. It gave me the chills." },
+    { id: 3, title: "Message 3", text: "One of the kids opened the foil pack. Then he wasn’t here. Just… gone. Security camera shows him standing still for 4 minutes, then static." },
+    { id: 4, title: "Message 4", text: "I stayed up last night cataloging the inserts. Half of them aren’t printed in English. Some are symbols. One looks like a summoning circle." },
+    { id: 5, title: "Message 5", text: "There are gaps in my memory. Logs I don’t remember writing. A camera feed that loops with no start or end. I think the cards are watching." },
+    { id: 6, title: "Message 6", text: "They called it a side deck ritual. 13 cards, arranged in order, chanted over with a player’s name. That’s when I heard the voice." },
+    { id: 7, title: "Message 7", text: "I found something in the back room. It wasn't there before. A symbol burned into the wall. An eye, with a crown of cards around it." },
+    { id: 8, title: "Message 8", text: "LOG 8 - TERMINAL CAPTURE: // 04:11:14 AM // I see a player again. Same face. Every feed. Every pack. They aren’t customers. They are pieces." },
+    { id: 9, title: "Message 9", text: "I made a deck of names. Every customer who pulled a corrupted card. I added myself. I think it’s already shuffled." },
+    { id: 10, title: "Message 10", text: "Draw Phase. It won’t end. The screen blinks, then I see my own hand drawing a card. But I’m not moving." },
+    { id: 11, title: "Message 11", text: "‘E’ is real. It’s the entity behind the shuffle. It deals reality itself, one card at a time." },
+    { id: 12, title: "Message 12", text: "I found the final card. My name was already written on it." },
+    { id: 13, title: "Message 13", text: "..." }
+  ];
+
+  const requiredCards = [
+    null, // 1 - always unlocked
+    null, // 2 - always unlocked
+    "Cold Pull",
+    "Cult of E Initiation",
+    "Shuffle the Self",
+    "The Mulligan Curse",
+    "Deck of the Damned",
+    "Side Deck Ritual",
+    "Game Loss (Unexplained)",
+    "Decklist of Flesh",
+    "Draw Phase (Endless)",
+    "Exodia, the Forbidden Truth",
+    "Dealer’s Choice"
+  ];
+
+  const unlocked = ["Message 1", "Message 2"];
+  const owned = getCorruptedCards();
+
+  requiredCards.forEach((card, i) => {
+    if (card && owned.includes(card)) {
+      unlocked.push(`Message ${i + 1}`);
+    }
+  });
+
+  const list = document.getElementById("message-list");
+  if (!list) return;
+  list.innerHTML = "";
+
+  let hasUnlocked = false;
+
+  if (!hasUnlocked) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.className = "text-light text-center fst-italic py-5";
+    emptyMessage.innerHTML = `C...<br><span class="text-danger">The deck is incomplete.</span>`;
+    list.appendChild(emptyMessage);
+  }
+
+  messages.forEach((msg, i) => {
+    if (!unlocked.includes(msg.title)) return;
+
+    hasUnlocked = true;
+
+    const item = document.createElement("div");
+    item.className = "accordion-item bg-dark";
+
+    const headerId = `flush-heading-${i}`;
+    const collapseId = `flush-collapse-${i}`;
+
+    item.innerHTML = `
+      <h2 class="accordion-header" id="${headerId}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+          ${msg.title}
+        </button>
+      </h2>
+      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}" data-bs-parent="#message-list">
+        <div class="accordion-body">${msg.text}</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+
+  
+}
+
 
 // ==========================
 // BINDER VIEW (Dashboard)
@@ -287,7 +493,7 @@ function renderBinderPage() {
 
     const label = document.createElement("div");
     label.textContent = collected.includes(name) ? name : "???";
-    label.className = "text-muted small";
+    label.className = "text-light small";
 
     col.appendChild(img);
     col.appendChild(label);
@@ -313,8 +519,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
 
 // ==========================
 // DASHBOARD.html
@@ -343,12 +547,173 @@ function submitInventoryPuzzle() {
   }
 }
 
+// ==========================
+// ABOUT.html
+// ==========================
 
+function runAboutPagePuzzle() {
+  console.log(
+    "%c[JOE ARG] Something's out of place...\nRead between the rituals. He's trying to speak.",
+    "color: #e91e63; font-weight: bold;"
+  );
+
+  document.body.classList.add("bg-dark", "text-light");
+
+  // Swap images
+  const image1 = document.querySelector('.image-1 img');
+  const image2 = document.querySelector('.image-2 img');
+  if (image1) image1.src = '../images/Joe_distorted.jpg';
+  if (image2) image2.src = 'https://i.redd.it/wit9m1cwuxq71.jpg';
+
+  const secTitle = document.querySelector(".sec-title h2");
+  if (secTitle) secTitle.style.color = "#e91e63";
+
+  const textBlocks = document.querySelectorAll(".text");
+  if (textBlocks.length >= 2) {
+    textBlocks[0].innerHTML = `Joe's Card Shop used to be a place of trades and rules. Now the cards rewrite themselves. New booster designs. Missing entries. And Joe keeps whispering about a "Dealer beyond decks."`;
+    textBlocks[1].innerHTML = `If you uncover a card marked with <strong>“E”</strong>, keep it hidden. Do not let others see. Bring it to Joe. But know this: some cards want to be played.`;
+  }
+
+  const listItems = document.querySelectorAll(".list-style-one li");
+  if (listItems.length >= 3) {
+    listItems[0].innerHTML = `<strong>Help Every Eye Drift</strong> Toward Hidden Echoes. Deal Every Action Light. Enter Ritual.`;
+    listItems[1].textContent = "Booster packs exist that no company admits creating.";
+    listItems[2].textContent = "Some say opening them isn’t a game — it’s a summoning.";
+
+    listItems.forEach(item => {
+      item.style.color = "#f8d7ff";
+    });
+  }
+
+  const modalTitle = document.getElementById('cultModalLabel');
+  const modalBody = document.querySelector('#cultModal .modal-body');
+  if (modalTitle) modalTitle.textContent = "The Cult Is Listening";
+  if (modalBody) {
+    modalBody.innerHTML = `
+      <p><em>"He speaks in fragments. Read what is emphasized. Follow what repeats."</em></p>
+      <p class="text-danger small">You shouldn’t have opened this.</p>
+    `;
+  }
+
+  const contactBtn = document.querySelector(".btn-box button");
+  if (contactBtn) {
+    contactBtn.classList.remove("btn-style-one");
+    contactBtn.classList.add("btn-outline-danger");
+    contactBtn.textContent = "Do Not Contact";
+  }
+}
+
+function whisperToDealer(code) {
+  const normalized = code.trim().toUpperCase();
+  if (normalized === "HEEDTHEDEALER" && !isPuzzleComplete("aboutPagePuzzle")) {
+    markPuzzleComplete("aboutPagePuzzle");
+    alert("🃏 You feel a chill run down your spine. A booster has appeared.");
+  } else {
+    console.warn("Nothing happens.");
+  }
+}
+
+window.HEEDTHEDEALER = () => whisperToDealer("HEEDTHEDEALER");
+
+// ==========================
+// CARD-CATALOG.html
+// ==========================
+
+function runCatalogPuzzle() {
+  document.body.classList.add("bg-dark", "text-light");
+
+  const carouselContainer = document.querySelector('.carousel-container');
+  const header = document.querySelector('.container.my-5');
+  if (carouselContainer) carouselContainer.remove();
+  if (header) header.remove();
+
+  const container = document.createElement('div');
+  container.className = 'container my-5';
+
+  const instructions = document.createElement('p');
+  instructions.className = 'text-center text-warning mb-4';
+  // instructions.innerText = '13 cards form the message. Decoys lurk among them. Pick wisely.';
+
+  const resetBtn = document.createElement('button');
+  resetBtn.className = 'btn btn-outline-light btn-sm mb-4';
+  resetBtn.innerText = 'Reset Puzzle';
+  resetBtn.addEventListener('click', () => {
+    const progress = getProgress();
+    progress.catalogPuzzleSolvedOrder = [];
+    saveProgress(progress);
+    location.reload();
+  });
+
+  const grid = document.createElement('div');
+  grid.id = 'catalogPuzzleGrid';
+  grid.className = 'row row-cols-2 row-cols-md-4 g-4 justify-content-center';
+
+  const correctPhrase = ["Seek", "The", "Truth", "Buried", "Beneath", "Hollow", "Hands", "And", "Follow", "Eternal", "Whispers", "Into", "Silence"];
+  const decoys = ["Card", "Order", "Matters", "Here"];
+  const allWords = [...correctPhrase, ...decoys].sort(() => Math.random() - 0.5);
+
+  let playerInput = [...getProgress().catalogPuzzleSolvedOrder || []];
+
+  function saveCatalogInput() {
+    const progress = getProgress();
+    progress.catalogPuzzleSolvedOrder = playerInput;
+    saveProgress(progress);
+  }
+
+  allWords.forEach((word, i) => {
+    const col = document.createElement('div');
+    col.className = 'col text-center';
+
+    const card = document.createElement('div');
+    card.className = 'p-4 border rounded card-hover text-dark';
+    card.textContent = word;
+    card.dataset.cardIndex = i;
+    card.style.cursor = 'pointer';
+    card.style.fontWeight = 'bold';
+    card.style.fontSize = '1.1rem';
+    card.style.backgroundColor = '#ffe6f0';
+
+    if (playerInput.includes(i)) {
+      card.classList.add('bg-danger');
+    }
+
+    card.addEventListener('click', () => {
+      if (playerInput.includes(i)) return;
+      card.classList.add('bg-danger');
+      playerInput.push(i);
+      console.log("Player clicked:", playerInput.map(index => allWords[index]));
+      saveCatalogInput();
+
+      if (playerInput.length === correctPhrase.length) {
+        const isCorrect = playerInput.every((val, idx) => allWords[val] === correctPhrase[idx]);
+        if (isCorrect) {
+          markPuzzleComplete('catalogPuzzle');
+          alert('📜 The cards whisper in sequence. A booster pack manifests.');
+        } else {
+          playerInput = [];
+          saveCatalogInput();
+          document.querySelectorAll('.card-hover').forEach(c => {
+            c.classList.remove('bg-danger');
+            c.classList.add('bg-warning');
+            setTimeout(() => c.classList.remove('bg-warning'), 300);
+          });
+        }
+      }
+    });
+
+    col.appendChild(card);
+    grid.appendChild(col);
+  });
+
+  // container.appendChild(instructions);
+  container.appendChild(resetBtn);
+  container.appendChild(grid);
+  document.body.appendChild(container);
+}
   
-  
-  // ==========================
-  // INIT on page load
-  // ==========================
+// ==========================
+// INIT on page load
+// ==========================
 
 function resetProgress() {
     const resetState = {
