@@ -1,140 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joe's Card Shop Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finale: Save Joe</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d0d0d;
-      color: #e0e0e0;
-    }
-    .navbar {
-      background-color: #1a1a1a;
-      border-bottom: 1px solid #444;
-    }
-    .sidebar {
-      min-height: 100vh;
-      background-color: #111;
-      padding-top: 1rem;
-      border-right: 1px solid #333;
-    }
-    .sidebar a {
-      color: #bbb;
-      padding: 0.75rem 1rem;
-      display: block;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    .sidebar a:hover, .sidebar a.active {
-      background-color: #222;
-      color: #e91e63;
-    }
-    .sidebar a .material-symbols-sharp {
-      vertical-align: middle;
-      margin-right: 0.5rem;
-    }
-    .content {
-      padding: 2rem;
-    }
-    .section {
-      display: none;
-    }
-    .section.active {
-      display: block;
-    }
-    .card {
-      background-color: #1e1e1e;
-      color: #fff;
-      border: 1px solid #333;
-    }
-    .list-group-item {
-      background-color: #191919;
-      border: 1px solid #333;
-      color: #ccc;
-    }
-    .list-group-item:hover {
-      background-color: #2a2a2a;
-    }
-    h1, h5 {
-      color: #e91e63;
-    }
+    body { background-color: #0a0a0a; color: #eee; font-family: 'Segoe UI', sans-serif; }
+    .game-wrapper { display: flex; flex-wrap: wrap; padding: 2rem; gap: 2rem; justify-content: center; }
+    .instructions { flex: 1 1 200px; max-width: 250px; background: #111; padding: 1rem; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; line-height: 1.3; }
+    .instructions h3 { color: #e91e63; margin-bottom: 0.5rem; }
+    .game-container { flex: 2 1 500px; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .health-bar { width: 100%; max-width: 400px; margin: 1rem 0; background: #222; border: 1px solid #444; height: 20px; position: relative; }
+    .health-fill { height: 100%; transition: width 0.3s; }
+    .health-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; line-height: 20px; text-align: center; pointer-events: none; color: #fff; font-weight: bold; font-size: 0.9rem; }
+    .player-bar .health-fill { background-color: #28a745; }
+    .enemy-bar .health-fill  { background-color: #dc3545; }
+    .field { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .card { width: 200px; height: 250px; background-color: #1e1e1e; border: 1px solid #555; border-radius: 8px; padding: 1rem; color: white; text-align: center; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s ease; }
+    .card:hover { transform: scale(1.05); }
+    .disabled { opacity: 0.5; pointer-events: none; }
+    .actions-remaining { font-size: 1.1rem; color: #ffc107; margin-bottom: 1rem; }
+    .enemy-hand .card { background-color: #552222; border-color: #882222; }
+    .enemy-field { margin-bottom: 3rem; }
+    .flash { animation: flash-red 0.4s ease-in-out; }
+    @keyframes flash-red { 0% { background-color: #ff4d4d; } 100% { background-color: #552222; } }
+    .game-status { position: absolute; top: 1rem; right: 1rem; color: #bbb; max-width: 200px; text-align: right; font-style: italic; }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Joe's Card Shop</a>
+  <div class="game-wrapper">
+    <div class="instructions">
+      <h3>The Cult's Guidance</h3>
+      <p>Health: You and Cult both at 50.</p>
+      <p>Two actions before the ritual resets.</p>
+      <p>Attack or heal — there is no middle path.</p>
+      <p>The cult strikes harder when it's stronger.</p>
+      <p>When weakened, it may retreat to restore.</p>
     </div>
-  </nav>
+    <div class="game-container">
+      <h2>🃏 Ritual Clash: Save Joe</h2>
+      <p class="text-danger">Defeat the Cult's avatar before your mind breaks.</p>
 
-  <div class="container-fluid">
-    <div class="row">
-      <nav class="col-md-3 col-lg-2 sidebar">
-        <a class="active" onclick="switchSection('inventory')">
-          <span class="material-symbols-sharp">inventory_2</span> Inventory Management
-        </a>
-        <a onclick="switchSection('binder')">
-          <span class="material-symbols-sharp">collections_bookmark</span> Card Binder
-        </a>
-        <a onclick="switchSection('messages')">
-          <span class="material-symbols-sharp">mail</span> Messages
-        </a>
-        <a onclick="switchSection('booster')">
-          <span class="material-symbols-sharp">auto_awesome</span> Mystery Booster
-        </a>
-      </nav>
+      <div class="field enemy-field enemy-hand" id="enemyField"></div>
+      <div class="health-bar enemy-bar">
+        <div class="health-text" id="enemyText">50/50</div>
+        <div class="health-fill" id="enemyHealth" style="width: 100%"></div>
+      </div>
 
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
-        <div id="inventory" class="section active">
-          <h1 class="mb-4">Inventory Management</h1>
-          <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card shadow-sm">
-                <div class="card-body">
-                  <h5 class="card-title">Inventory Items</h5>
-                  <p class="card-text">325 cards in stock</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="health-bar player-bar">
+        <div class="health-text" id="playerText">50/50</div>
+        <div class="health-fill" id="playerHealth" style="width: 100%"></div>
+      </div>
 
-        <div id="binder" class="section">
-          <h1 class="mb-4">Card Binder</h1>
-          <p>You have 58 binders created.</p>
-        </div>
+      <div class="actions-remaining" id="actionsRemaining">Actions left: 2</div>
+      <div class="field player-hand" id="playerHand"></div>
 
-        <div id="messages" class="section">
-          <h1 class="mb-4">Messages</h1>
-          <p>12 unread messages.</p>
-        </div>
+      <div class="mt-3">
+        <button class="btn btn-danger" id="endTurnBtn">End Turn</button>
+      </div>
 
-        <div id="booster" class="section">
-          <h1 class="mb-4">Mystery Booster</h1>
-          <ul class="list-group">
-            <li class="list-group-item">Booster Pack #001 - Unopened</li>
-            <li class="list-group-item">Booster Pack #002 - Contains rare foil</li>
-            <li class="list-group-item">Booster Pack #003 - Opened</li>
-          </ul>
-        </div>
-      </main>
+      <p id="gameStatus" class="game-status"></p>
     </div>
   </div>
 
   <script>
-    function switchSection(id) {
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+    const iconMap = { attack: '🗡️', heal: '❤️' };
+    const maxHealth = 50;
+    let playerDeck = [
+      { name:'Meme Sorcerer', atk: 8, effect:null, type:'attack' },
+      { name:'Spa Day Break', atk:0, effect:'heal', type:'heal' },
+      { name:'Fusion Override', atk:6, effect:null, type:'attack' },
+      { name:'James, Assimus Maximus', atk:10, effect:null, type:'attack' },
+      { name:'Memetic Pulse', atk:6, effect:null, type:'attack' },
+      { name:'Paradox Slash', atk:7, effect:null, type:'attack' },
+      { name:'Void Strike', atk:9, effect:null, type:'attack' },
+      { name:'Cultist’s Offering', atk:0, effect:'heal', type:'heal' },
+      { name:'Satirical Slice', atk:7, effect:null, type:'attack' },
+      { name:'Laughing Blade', atk:6, effect:null, type:'attack' },
+      { name:'Meme Barrage', atk:8, effect:null, type:'attack' }
+    ];
+    let cultDeck = [
+      { name:'E-Sigil', atk:8, effect:null, type:'attack' },
+      { name:'Whispers', atk:5, effect:null, type:'attack' },
+      { name:'Mind Drain', atk:0, effect:'heal', type:'heal' },
+      { name:'Blood Chant', atk:6, effect:null, type:'attack' },
+      { name:'Dark Offering', atk:0, effect:'heal', type:'heal' },
+      { name:'Shadow Swipe', atk:7, effect:null, type:'attack' },
+      { name:'Pain Echo', atk:9, effect:null, type:'attack' }
+    ];
+    let currentCultHand = [];
+    let playerHealth = maxHealth, enemyHealth = maxHealth, actions = 2, usedCards = new Set();
 
-      document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+    const playerHealthBar = document.getElementById('playerHealth'), enemyHealthBar = document.getElementById('enemyHealth');
+    const playerText = document.getElementById('playerText'), enemyText = document.getElementById('enemyText');
+    const playerHand = document.getElementById('playerHand'), enemyField = document.getElementById('enemyField');
+    const statusText = document.getElementById('gameStatus'), actionDisplay = document.getElementById('actionsRemaining');
+
+    function renderHealth() {
+      playerHealthBar.style.width = (playerHealth/maxHealth*100) + '%';
+      enemyHealthBar.style.width = (enemyHealth/maxHealth*100) + '%';
+      playerText.textContent = `${playerHealth}/${maxHealth}`;
+      enemyText.textContent  = `${enemyHealth}/${maxHealth}`;
     }
+
+    function updateActionsDisplay() {
+      actionDisplay.textContent = `Actions left: ${actions}`;
+    }
+
+    function checkVictoryCondition() {
+      if (enemyHealth <= 0) {
+        statusText.textContent = 'Ritual broken. Dealer is free.';
+        setTimeout(() => window.location.href = 'save_joe.html', 2000);
+        return true;
+      }
+      if (playerHealth <= 0) {
+        statusText.textContent = 'You fall. The cult claims your soul.';
+        setTimeout(() => window.location.href = 'join_cult.html', 2000);
+        return true;
+      }
+      return false;
+    }
+
+    function playCard(card, el) {
+      if (actions <= 0 || playerHealth <= 0 || enemyHealth <= 0) return;
+      actions--;
+      updateActionsDisplay();
+      usedCards.add(card.name);
+
+      if (card.effect === 'heal') {
+        playerHealth = Math.min(playerHealth + 10, maxHealth);
+        statusText.textContent = `${card.name} restores your strength.`;
+      } else {
+        enemyHealth = Math.max(0, enemyHealth - card.atk);
+        statusText.textContent = `${card.name} hits the cult for ${card.atk}.`;
+      }
+      renderHealth();
+
+      if (checkVictoryCondition()) return;
+
+      el.classList.add('disabled');
+      el.removeEventListener('click', el._listener);
+    }
+
+    function chooseCultCard(pool) {
+      if (enemyHealth <= 15 && pool.some(x => x.effect === 'heal')) {
+        return pool.find(x => x.effect === 'heal');
+      }
+      if (playerHealth <= 15 && pool.some(x => x.effect !== 'heal' && x.atk >= 8)) {
+        return pool.find(x => x.atk >= 8);
+      }
+      return pool.find(x => x.effect !== 'heal') || pool[0];
+    }
+
+    function drawPlayerHand() {
+      playerHand.innerHTML = '';
+      playerDeck.filter(c => !usedCards.has(c.name))
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3)
+        .forEach(card => {
+          const el = document.createElement('div');
+          el.className = 'card';
+          const icon = iconMap[card.type] || '';
+          el.innerHTML = `<strong>${card.name}</strong><br>${icon} ${card.atk}`;
+          el._listener = () => playCard(card, el);
+          el.addEventListener('click', el._listener);
+          playerHand.appendChild(el);
+        });
+    }
+
+    function drawEnemyCards() {
+      enemyField.innerHTML = '';
+      currentCultHand = [];
+      const pool = [...cultDeck];
+      for (let i = 0; i < 3 && pool.length > 0; i++) {
+        const card = chooseCultCard(pool);
+        currentCultHand.push(card);
+        const el = document.createElement('div');
+        el.className = 'card';
+        const icon = iconMap[card.type] || '';
+        el.innerHTML = `<strong>${card.name}</strong><br>${icon} ${card.atk}`;
+        enemyField.appendChild(el);
+        pool.splice(pool.findIndex(c => c.name === card.name), 1);
+      }
+    }
+
+    function endTurn() {
+      if (currentCultHand.length === 0) drawEnemyCards();
+      const card = chooseCultCard(currentCultHand);
+      const cardIndex = currentCultHand.findIndex(c => c.name === card.name);
+      if (cardIndex >= 0) {
+        enemyField.children[cardIndex].classList.add('flash');
+        setTimeout(() => enemyField.children[cardIndex]?.classList.remove('flash'), 600);
+        if (card.effect === 'heal') {
+          enemyHealth = Math.min(enemyHealth + 10, maxHealth);
+          statusText.textContent = `${card.name} restores cult energy.`;
+        } else {
+          playerHealth = Math.max(0, playerHealth - card.atk);
+          statusText.textContent = `${card.name} strikes you for ${card.atk}.`;
+        }
+        currentCultHand.splice(cardIndex, 1);
+        drawEnemyCards();
+        renderHealth();
+        if (checkVictoryCondition()) return;
+      }
+      actions = 2;
+      updateActionsDisplay();
+      drawPlayerHand();
+    }
+
+    document.getElementById('endTurnBtn').addEventListener('click', endTurn);
+    renderHealth();
+    updateActionsDisplay();
+    drawPlayerHand();
+    drawEnemyCards();
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

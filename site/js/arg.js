@@ -124,8 +124,7 @@ function checkCurrentPage() {
   // ... add more pages as needed
 }
   
-  
-  
+
 // ==========================
 // ARG Progression System
 // ==========================
@@ -137,11 +136,15 @@ function initProgression() {
         aboutPagePuzzle: false,
         catalogPuzzle: false,
         indexPuzzle: false,
-        dashboardPuzzle: false
+        dashboardPuzzle: false,
+        hiddenPuzzle1: false,
+        hiddenPuzzle2: false
       },
       boosterPacks: [],
-      corruptedCards: []
+      corruptedCards: [],
+      catalogPuzzleSolvedOrder: []
     };
+    
     localStorage.setItem('joe_progress', JSON.stringify(defaultProgress));
   }
 }
@@ -158,11 +161,28 @@ function markPuzzleComplete(puzzleKey) {
   const progress = getProgress();
   if (!progress.puzzlesCompleted[puzzleKey]) {
     progress.puzzlesCompleted[puzzleKey] = true;
-    const rewardNumber = Object.values(progress.puzzlesCompleted).filter(p => p).length;
-    progress.boosterPacks.push(`Booster #00${rewardNumber}`);
+
+    const rewards = puzzleRewardMap[puzzleKey] || [];
+    rewards.forEach(booster => {
+      if (!progress.boosterPacks.includes(booster)) {
+        progress.boosterPacks.push(booster);
+      }
+    });
+
+
     saveProgress(progress);
   }
 }
+
+function hasUnlockedFinale() {
+  const progress = getProgress();
+  return progress.puzzlesCompleted.aboutPagePuzzle &&
+         progress.puzzlesCompleted.catalogPuzzle &&
+         progress.puzzlesCompleted.indexPuzzle &&
+         progress.puzzlesCompleted.dashboardPuzzle;
+}
+
+
 
 function addCorruptedCard(cardCode) {
   const progress = getProgress();
@@ -183,6 +203,51 @@ function getUnlockedBoosters() {
 function getCorruptedCards() {
   return getProgress().corruptedCards;
 }
+
+// Booster card mappings
+// Map each puzzle key to a booster reward
+const puzzleRewardMap = {
+  indexPuzzle: ["Booster #001"],
+  aboutPagePuzzle: ["Booster #002"],
+  catalogPuzzle: ["Booster #003"],
+  dashboardPuzzle: ["Booster #004"],
+  hiddenPuzzle1: ["Booster #005"],
+  hiddenPuzzle2: ["Booster #006"],
+  bonusChallenge: ["Booster #002", "Booster #003"] // ⬅ multiple rewards
+};
+
+
+const boosterCardMap = {
+  'Booster #001': ["The Dealer", "Cold Pull"],
+  'Booster #002': ["Cult of E Initiation", "Shuffle the Self"],
+  'Booster #003': ["The Mulligan Curse", "Deck of the Damned", "Side Deck Ritual"],
+  'Booster #004': ["Game Loss (Unexplained)", "Decklist of Flesh", "Draw Phase (Endless)"],
+  'Booster #005': ["Exodia, the Forbidden Truth"],
+  'Booster #006': ["Dealer’s Choice", "The Empty Sleeve"]
+};
+
+const corruptedCardImages = {
+  "The Dealer": "../images/corrupted_cards/dealer_01.png",
+  "Cold Pull": "../images/corrupted_cards/coldPull_02.png",
+  "Cult of E Initiation": "../images/corrupted_cards/invite_03.png",
+  "Shuffle the Self": "../images/corrupted_cards/shuffle_04.png",
+  "The Mulligan Curse": "../images/corrupted_cards/mulligan_05.png",
+  "Deck of the Damned": "../images/corrupted_cards/damned_06.png",
+  "Side Deck Ritual": "../images/corrupted_cards/sideDeck_07.png",
+  "Game Loss (Unexplained)": "../images/corrupted_cards/loss_08.png",
+  "Decklist of Flesh": "../images/corrupted_cards/flesh_09.png",
+  "Draw Phase (Endless)": "../images/corrupted_cards/draw_10.png",
+  "Exodia, the Forbidden Truth": "../images/corrupted_cards/exodia_11.png",
+  "Dealer’s Choice": "../images/corrupted_cards/choice_12.png",
+  "The Empty Sleeve": "../images/corrupted_cards/sleeve_13.png"
+};
+
+let regularCardImages = [];
+fetch("../json/cards.json")
+  .then(res => res.json())
+  .then(data => {
+    regularCardImages = data.map(card => card.image);
+  });
 
 // ==========================
 // INDEX.html
@@ -275,6 +340,7 @@ function runBoosterPage() {
     <div id="openedCards" class="row g-4"></div>
   `;
 
+  boosterSection.innerHTML = "";
   boosterSection.appendChild(boosterList);
 
   document.getElementById("openOne").onclick = () => openBoosters(1);
@@ -286,37 +352,74 @@ function openBoosters(count) {
   const progress = getProgress();
   const boosterContainer = document.getElementById("openedCards");
   const opened = progress.boosterPacks.splice(0, count);
+  const newlyCollected = [];
 
-  for (let i = 0; i < opened.length; i++) {
-    for (let j = 0; j < 3; j++) {
-      const card = document.createElement("div");
-      card.className = "col-6 col-sm-4 col-md-3 col-lg-2 text-center mb-4";
-      card.innerHTML = `
+  opened.forEach(booster => {
+    const corrupted = boosterCardMap[booster] || [];
+    const cardsInBooster = [...corrupted];
+
+    while (cardsInBooster.length < 3) {
+      const randIndex = Math.floor(Math.random() * regularCardImages.length);
+      cardsInBooster.push(regularCardImages[randIndex]);
+    }
+
+    // shuffle
+   for (let i = cardsInBooster.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cardsInBooster[i], cardsInBooster[j]] = [cardsInBooster[j], cardsInBooster[i]];
+    }
+
+    cardsInBooster.forEach(card => {
+      const isCorrupted = corruptedCardImages.hasOwnProperty(card);
+      if (isCorrupted && !progress.corruptedCards.includes(card)) {
+        progress.corruptedCards.push(card);
+      }
+      
+
+      const imageSrc = isCorrupted ? corruptedCardImages[card] : card;
+      const cardDiv = document.createElement("div");
+      cardDiv.className = "col-6 col-md-4 col-lg-2 text-center";
+      cardDiv.innerHTML = `
         <div class="flip-card">
           <div class="flip-card-inner">
             <div class="flip-card-front">
               <img src="../images/placeholder.png" class="img-fluid rounded shadow" style="height:300px; object-fit:cover;" alt="Front" />
             </div>
-            <div class="flip-card-back">
-              <img src="../images/corrupted_cards/#${Math.floor(Math.random()*13+1)}_dealer.png" class="img-fluid rounded shadow" style="height:300px; object-fit:cover;" alt="Back" />
+             <div class="flip-card-back">
+              <img src="${imageSrc}" class="img-fluid rounded shadow" style="height:300px; object-fit:cover;" alt="Back" />
             </div>
           </div>
         </div>
       `;
-      boosterContainer.appendChild(card);
-    }
-  }
+      boosterContainer.appendChild(cardDiv);
+      
+      
+    });
+  });
 
   saveProgress(progress);
   document.getElementById("flipCards").style.display = "inline-block";
+
+  // update counter
+  document.querySelector("#booster h5").innerHTML = `You have <strong>${progress.boosterPacks.length}</strong> booster pack(s).`;
 }
 
-function flipAllCards() {
-  const cards = document.querySelectorAll(".flip-card-inner");
-  cards.forEach(card => card.classList.toggle("flipped"));
+function updateBoosterCountUI() {
+  const boosterCount = getUnlockedBoosters().length;
+  const countElement = document.getElementById("booster-count");
+  if (countElement) {
+    countElement.innerHTML = `You have <strong>${boosterCount}</strong> booster pack(s).`;
 
-  setTimeout(showBoosterModal, 2000);
+    // Also disable buttons if no packs left
+    const openOne = document.getElementById("openOne");
+    const openAll = document.getElementById("openAll");
+    if (boosterCount === 0) {
+      if (openOne) openOne.disabled = true;
+      if (openAll) openAll.disabled = true;
+    }
+  }
 }
+
 
 function flipAllCards() {
   const cards = document.querySelectorAll(".flip-card-inner");
@@ -327,6 +430,29 @@ function flipAllCards() {
     boosterModalShown = true;
     setTimeout(showBoosterModal, 2000);
   }
+}
+
+function showBoosterModal() {
+  const modal = document.createElement("div");
+  modal.className = "modal fade";
+  modal.id = "boosterModal";
+  modal.tabIndex = -1;
+  modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title">Binder Updated</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          3 cards have been added to your binder.
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  const bsModal = new bootstrap.Modal(modal);
+  bsModal.show();
 }
 
 
@@ -415,7 +541,7 @@ function renderMessages() {
   if (!hasUnlocked) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "text-light text-center fst-italic py-5";
-    emptyMessage.innerHTML = `C...<br><span class="text-danger">The deck is incomplete.</span>`;
+    emptyMessage.innerHTML = `They haven’t spoken to you... yet<br><span class="text-danger">The deck is incomplete.</span>`;
     list.appendChild(emptyMessage);
   }
 
@@ -451,21 +577,6 @@ function renderMessages() {
 // BINDER VIEW (Dashboard)
 // ==========================
 
-const corruptedCardImages = {
-  "The Dealer": "../images/corrupted_cards/dealer_01.png",
-  "Cold Pull": "../images/corrupted_cards/coldPull_02.png",
-  "Cult of E Initiation": "../images/corrupted_cards/invite_03.png",
-  "Shuffle the Self": "../images/corrupted_cards/shuffle_04.png",
-  "The Mulligan Curse": "../images/corrupted_cards/mulligan_05.png",
-  "Deck of the Damned": "../images/corrupted_cards/damned_06.png",
-  "Side Deck Ritual": "../images/corrupted_cards/sideDeck_07.png",
-  "Game Loss (Unexplained)": "../images/corrupted_cards/loss_08.png",
-  "Decklist of Flesh": "../images/corrupted_cards/flesh_09.png",
-  "Draw Phase (Endless)": "../images/corrupted_cards/draw_10.png",
-  "Exodia, the Forbidden Truth": "../images/corrupted_cards/exodia_11.png",
-  "Dealer’s Choice": "../images/corrupted_cards/choice_12.png",
-  "The Empty Sleeve": "../images/corrupted_cards/sleeve_13.png"
-};
 
 const placeholderImage = "../images/placeholder.png";
 let currentBinderPage = 0;
@@ -710,6 +821,107 @@ function runCatalogPuzzle() {
   container.appendChild(grid);
   document.body.appendChild(container);
 }
+
+// ==========================
+// Finale
+// ==========================
+
+
+function runFinaleSection() {
+  const container = document.getElementById("finale-content");
+  if (!container) return;
+
+  const totalCorrupted = Object.keys(corruptedCardImages).length;
+  const collected = getCorruptedCards();
+
+  const isComplete = collected.length === totalCorrupted;
+
+  const incompletePoem = `
+    <p class="mb-3" style="white-space: pre-wrap;">
+    When all cards align beneath waning stars,  
+    And silence replaces the shuffle of chance,  
+    The Dealer's role must find a heir—  
+    Or the deck will fracture beyond repair.
+
+    Those who walk the spiral path,  
+    Will hear the rules unspoken,  
+    Will see the hands behind the veil,  
+    And feel their minds be broken.
+
+    Refuse the throne and the game persists,  
+    The void reclaims what dared to resist.  
+    But join the Cult, and ink your name,  
+    In crimson runes within the flame.
+
+    You’ll deal not cards but woven fates,  
+    Rewrite the truths the world creates.  
+    But once you deal that final hand—  
+    You won't remember where you stand.
+
+    This is your warning and your prize.  
+    Choose your fate. Before He arrives.
+    </p>
+  `;
+
+  const completePoem = `
+  <p class="mb-3" style="white-space: pre-wrap;">
+  The ink has dried, the final draw,  
+  You’ve witnessed Truth beneath the flaw.  
+  All thirteen signs, now in your hand—  
+  The shuffle stops. You understand.
+
+  He waits between each phase and turn,  
+  In every card you chose to burn.  
+  A shadow deep in plastic gloss,  
+  The price of fate, the dealer’s cost.
+
+  You did not win. You were selected.  
+  Your deck by eldritch force perfected.  
+  You walked the maze, you spoke the name,  
+  You summoned Him inside the game.
+
+  The Dealer kneels. The cards obey.  
+  The world itself begins to fray.  
+  The final rule has now been read—  
+  E is not drawn. E is bred.
+
+  Take your place. Begin the rite.  
+  End the round, or end the light.
+  </p>
+  `;
+
+  const poem = isComplete ? completePoem : incompletePoem;
+
+  const title = isComplete
+    ? "The Deck is Complete."
+    : "The Binder is Incomplete.";
+
+  const summary = isComplete
+    ? `<p>You have collected all <strong>${totalCorrupted}</strong> corrupted cards.</p>`
+    : `<p>You are missing <strong>${totalCorrupted - collected.length}</strong> corrupted card(s). Yet the Cult calls regardless.</p>`;
+
+  container.innerHTML = `
+    <div class="p-4 rounded shadow-lg bg-black border border-danger">
+      <h4 class="text-danger mb-3">${title}</h4>
+      ${summary}
+      ${poem}
+      <div class="mt-4">
+        <button class="btn btn-outline-success me-2" onclick="chooseFinale('save')">Save Joe</button>
+        <button class="btn btn-outline-danger" onclick="chooseFinale('cult')">Join the Cult</button>
+      </div>
+    </div>
+  `;
+}
+
+
+function chooseFinale(choice) {
+  if (choice === 'save') {
+    alert("🌄 You cleanse the binder. Joe returns, different... but free.");
+  } else if (choice === 'cult') {
+    alert("👁 You accept the final card. Your name joins the Deck of Flesh.");
+  }
+}
+
   
 // ==========================
 // INIT on page load
