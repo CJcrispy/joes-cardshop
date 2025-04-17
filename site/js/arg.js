@@ -272,7 +272,7 @@ document.addEventListener('keydown', (e) => {
 
 function konamiSuccess() {
   // Only trigger once
-  const puzzleKey = "indexPuzzle";
+  const puzzleKey = "hiddenPuzzle1";
   if (isPuzzleComplete(puzzleKey)) return;
 
   markPuzzleComplete(puzzleKey);
@@ -283,37 +283,40 @@ function konamiSuccess() {
 }
 
 function runIndexPuzzleSetup() {
-    // Set the background to dark mode
-    document.body.classList.add("bg-dark");
-    document.body.classList.add("text-light");
+  console.log("%cA hidden booster whispers through the void...", "color: #ff4477; font-weight: bold;");
+  console.log("%c↑ ↑ ↓ ↓ ← → ← → B A", "color: #8428aa; font-style: italic;");
 
-    const section = document.querySelector(".section-title");
-    if (section) section.textContent = "F̷̟̓e̶̺͐a̸͉̚t̴͚̓u̸̩͊r̵̛͔ḛ̴͂d̶͚͊ ̶͚͐C̷͇̕a̷̲͊t̶̙̕ẻ̶̜g̴̺͝ơ̷͙r̶̯̄i̶͚̐e̸̝̊s̸̬̎";
-  
-    const cards = document.querySelectorAll(".card");
-    if (!cards || cards.length < 3) return;
-  
-    // Card 1 - Corrupted Magic
-    cards[0].querySelector("img").src = "https://media.tenor.com/GY5ihAZWNWEAAAAM/ojos.gif";
-    cards[0].querySelector("h5").innerHTML = "M̵̖̚à̴̜g̴̡͝i̴̜͝c̴͈͐";
-    cards[0].querySelector("p").innerHTML = "T̬͞h̡͔e͉͢ ́g̨͕a͝m͈e̡͠ ̨̮w͢i̡̯l̴͔l̵ ̨̻k̛̺n̤͠o̵̘ẁ͓.̢͚";
-  
-    // Card 2 - Corrupted Pokémon
-    cards[1].querySelector("img").src = "https://media.istockphoto.com/id/1299163187/photo/ghostly-figure-praying-in-the-dark.jpg?s=612x612&w=0&k=20&c=HtWg5_zCULK0Ar--OjIw55_KIDE3JAjYFKnKQ9upNFI=";
-    cards[1].querySelector("h5").innerHTML = "P̸̠̊o̷̠̚k̶̤̏é̷͍̓m̵̘͗ơ̷͓n̵̻͒";
-    cards[1].querySelector("p").innerHTML = "T̬́h̠͝e̹͘y̸̝̰'͇͡ŕ͕e̡̺ ̷̖̘a̗͝l̢̖r̶͎e̛̗a̴͕d̞͞y̛͔ ͏̟h͙͢e̥͘r͠ͅe͘.̛";
-  
-    // Card 3 - Link to game.html
-    const thirdCard = cards[2].closest(".card");
-    const gameLink = document.createElement("a");
-    gameLink.href = "./pages/marble-labyrinth.html";
-    gameLink.className = "text-decoration-none";
-    thirdCard.parentNode.replaceChild(gameLink, thirdCard);
-    gameLink.appendChild(thirdCard);
-  
-    cards[2].querySelector("img").src = "https://img.freepik.com/premium-photo/dark-spooky-maze-with-unexpected-frights-around-corners_1314467-158517.jpg";
-    cards[2].querySelector("h5").innerHTML = "E̶̪͋N̴͗ͅT̷̯͒Ḛ̵̚R̶̞̉";
-    cards[2].querySelector("p").innerHTML = "S̻͟ò̢m̺̀e̚͢ ̴̯g̷̹a̡͕t͏͍e̼͡s͈͝ ̴̜m̡͡u̷̯s̤͡t͔͝ ͙͞b̖͜e̡͇ ̨̗w̛̳a̵͖l̷̥k̴͕e̡͢d̷͕.̷̨.̸.̶";
+  // Set the background to dark mode
+  document.body.classList.add("bg-dark");
+  document.body.classList.add("text-light");
+
+  const section = document.querySelector(".section-title");
+  if (section) section.textContent = "F̷̟̓e̶̺͐a̸͉̚t̴͚̓u̸̩͊r̵̛͔ḛ̴͂d̶͚͊ ̶͚͐C̷͇̕a̷̲͊t̶̙̕ẻ̶̜g̴̺͝ơ̷͙r̶̯̄i̶͚̐e̸̝̊s̸̬̎";
+
+  const cards = document.querySelectorAll(".card");
+  if (!cards || cards.length < 3) return;
+
+  // Card 1 - Corrupted Magic
+  cards[0].querySelector("img").src = "https://media.tenor.com/GY5ihAZWNWEAAAAM/ojos.gif";
+  cards[0].querySelector("h5").innerHTML = "M̵̖̚à̴̜g̴̡͝i̴̜͝c̴͈͐";
+  cards[0].querySelector("p").innerHTML = "T̬͞h̡͔e͉͢ ́g̨͕a͝m͈e̡͠ ̨̮w͢i̡̯l̴͔l̵ ̨̻k̛̺n̤͠o̵̘ẁ͓.̢͚";
+
+  // Card 2 - Corrupted Pokémon
+  cards[1].querySelector("img").src = "https://media.istockphoto.com/id/1299163187/photo/ghostly-figure-praying-in-the-dark.jpg?s=612x612&w=0&k=20&c=HtWg5_zCULK0Ar--OjIw55_KIDE3JAjYFKnKQ9upNFI=";
+  cards[1].querySelector("h5").innerHTML = "P̸̠̊o̷̠̚k̶̤̏é̷͍̓m̵̘͗ơ̷͓n̵̻͒";
+  cards[1].querySelector("p").innerHTML = "T̬́h̠͝e̹͘y̸̝̰'͇͡ŕ͕e̡̺ ̷̖̘a̗͝l̢̖r̶͎e̛̗a̴͕d̞͞y̛͔ ͏̟h͙͢e̥͘r͠ͅe͘.̛";
+
+  // Card 3 - Link to game.html
+  const thirdCard = cards[2].closest(".card");
+  const gameLink = document.createElement("a");
+  gameLink.href = "./pages/marble-labyrinth.html";
+  gameLink.className = "text-decoration-none";
+  thirdCard.parentNode.replaceChild(gameLink, thirdCard);
+  gameLink.appendChild(thirdCard);
+
+  cards[2].querySelector("img").src = "https://img.freepik.com/premium-photo/dark-spooky-maze-with-unexpected-frights-around-corners_1314467-158517.jpg";
+  cards[2].querySelector("h5").innerHTML = "E̶̪͋N̴͗ͅT̷̯͒Ḛ̵̚R̶̞̉";
+  cards[2].querySelector("p").innerHTML = "S̻͟ò̢m̺̀e̚͢ ̴̯g̷̹a̡͕t͏͍e̼͡s͈͝ ̴̜m̡͡u̷̯s̤͡t͔͝ ͙͞b̖͜e̡͇ ̨̗w̛̳a̵͖l̷̥k̴͕e̡͢d̷͕.̷̨.̸.̶";
 }
 
 // ==========================
@@ -635,9 +638,10 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================
 // DASHBOARD.html
 // ==========================
-console.log("%cHint: Try using ASCII values.", "color: #999; font-style: italic;");
 
 function setupInventoryPuzzle() {
+  console.log("%cHint: Try using ASCII values.", "color: #999; font-style: italic;");
+
   const puzzleKey = "dashboardPuzzle";
   if (isPuzzleComplete(puzzleKey)) {
     document.getElementById("inventory-answer").placeholder = "Booster already unlocked.";
@@ -714,20 +718,6 @@ function runAboutPagePuzzle() {
     contactBtn.textContent = "Do Not Contact";
   }
 
-
-  // Cult Whisper
-  console.log(
-    "%cThe Dealer speaks:",
-    "color: #e91e63; font-weight: bold; font-size: 14px;"
-  );
-  console.log(
-    "%c\"Memory is the test. Most will forget. The worthy will find the path.\"",
-    "color: #ccc; font-style: italic;"
-  );
-  console.log(
-    "%c>> /rituals/memory_test.html",
-    "color: #0ff; font-family: monospace;"
-  );
 }
 
 function whisperToDealer(code) {
@@ -747,6 +737,20 @@ window.HEEDTHEDEALER = () => whisperToDealer("HEEDTHEDEALER");
 // ==========================
 
 function runCatalogPuzzle() {
+  // Cult Whisper
+  console.log(
+    "%cThe Dealer speaks:",
+    "color: #e91e63; font-weight: bold; font-size: 14px;"
+  );
+  console.log(
+    "%c\"Memory is the test. Most will forget. The worthy will find the path.\"",
+    "color: #ccc; font-style: italic;"
+  );
+  console.log(
+    "%c>> /rituals/memory-test.html",
+    "color: #0ff; font-family: monospace;"
+  );
+
   document.body.classList.add("bg-dark", "text-light");
 
   const carouselContainer = document.querySelector('.carousel-container');
@@ -947,18 +951,21 @@ function chooseFinale(choice) {
 // ==========================
 
 function resetProgress() {
-    const resetState = {
-      puzzlesCompleted: {
-        aboutPagePuzzle: false,
-        catalogPuzzle: false,
-        indexPuzzle: false,
-        dashboardPuzzle: false
-      },
-      boosterPacks: [],
-      corruptedCards: []
-    };
-    localStorage.setItem('joe_progress', JSON.stringify(resetState));
-    console.log("🔄 Progress reset. All puzzles are now unsolved.");
+  const resetState = {
+    puzzlesCompleted: {
+      aboutPagePuzzle: false,
+      catalogPuzzle: false,
+      indexPuzzle: false,
+      dashboardPuzzle: false,
+      hiddenPuzzle1: false,
+      hiddenPuzzle2: false
+    },
+    boosterPacks: [],
+    corruptedCards: [],
+    catalogPuzzleSolvedOrder: []
+  };
+  localStorage.setItem('joe_progress', JSON.stringify(resetState));
+  console.log("🔄 Progress reset. All puzzles are now unsolved.");
 }
   
 document.addEventListener("DOMContentLoaded", () => {

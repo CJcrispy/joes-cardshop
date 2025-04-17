@@ -19,7 +19,7 @@
       flex-direction: column;
     }
     .deck {
-      width: 640px;
+      width: 670px;
       background: #111;
       padding: 16px;
       border-radius: 10px;
@@ -82,16 +82,17 @@
 <body>
   <div class="deck" id="deck"></div>
   <div id="timer">Time Remaining: <span id="time-left">60</span>s</div>
-  <button class="reset-btn" onclick="initGame()">Reset</button>
+  <button class="reset-btn" id="reset-btn" style="display: none;" onclick="initGame()">Reset</button>
 
   <script>
     const symbols = [
-      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask',
-      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask'
+      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask', 'shop', 'question',
+      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask', 'shop', 'question'
     ].map(icon => `<i class="fas fa-${icon}"></i>`);
 
-    let opened = [], matched = 0;
+    let opened = [], matched = 0, timerInterval, gameOver = false;
     const deck = document.getElementById('deck');
+    const timeLeftDisplay = document.getElementById('time-left');
 
     function shuffle(array) {
       let currentIndex = array.length, randomIndex;
@@ -104,23 +105,31 @@
     }
 
     function startTimer(duration) {
-        clearInterval(timerInterval);
-        let timeLeft = duration;
+      const timeLeftDisplay = document.getElementById('time-left');
+      clearInterval(timerInterval);
+      let timeLeft = duration;
+      timeLeftDisplay.textContent = timeLeft;
+      document.getElementById('reset-btn').style.display = "none";
+      gameOver = false;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
         timeLeftDisplay.textContent = timeLeft;
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            timeLeftDisplay.textContent = timeLeft;
-            if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            Swal.fire({
-                title: `Time's Up!`,
-                text: 'The cards fade into shadow. You failed to complete the puzzle.',
-                icon: 'error',
-                confirmButtonColor: '#5e1979'
-            });
-            }
-        }, 1000);
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          gameOver = true;
+          document.getElementById('reset-btn').style.display = "inline-block";
+
+          Swal.fire({
+            title: `Time's Up!`,
+            text: 'The cards fade into shadow. You failed to complete the puzzle.',
+            icon: 'error',
+            confirmButtonColor: '#5e1979'
+          });
         }
+      }, 1000);
+    }
+
 
 
     function initGame() {
@@ -139,6 +148,8 @@
     }
 
     function handleCardClick(e) {
+      if (gameOver) return;
+
       const card = e.currentTarget;
       if (card.classList.contains('open') || card.classList.contains('match') || opened.length === 2) return;
 
@@ -153,6 +164,7 @@
           second.classList.add('match');
           matched++;
           if (matched === symbols.length / 2) {
+            clearInterval(timerInterval);
             setTimeout(() => {
               Swal.fire({
                 title: 'Puzzle Solved',
@@ -160,7 +172,12 @@
                 icon: 'success',
                 confirmButtonColor: '#5e1979'
               });
-              sessionStorage.setItem('puzzle_hidden2', 'complete');
+              markPuzzleComplete('puzzle_hidden2');
+
+              setTimeout(() => {
+                window.location.href = "../index.html";
+              }, 4000);
+
             }, 500);
           }
         } else {
@@ -179,5 +196,6 @@
 
     initGame();
   </script>
+  <script src="../js/arg.js"></script>
 </body>
 </html>

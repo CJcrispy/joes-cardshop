@@ -9,6 +9,7 @@ function switchSection(id) {
   if (id === "binder" && typeof renderBinderPage === "function") {
     renderBinderPage();
   }
+  if (id === 'inventory') setupInventoryPuzzle();
   if (id === 'messages') renderMessages();
   if (id === 'booster') runBoosterPage();
   if (id === 'finale') runFinaleSection();

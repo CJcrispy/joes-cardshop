@@ -145,7 +145,10 @@
   <div class="container-fluid">
     <div class="row">
       <nav class="col-md-3 col-lg-2 sidebar d-none d-md-block">
-        <a class="active" onclick="switchSection('inventory')">
+        <a class="active" onclick="switchSection('welcome')">
+          <span class="material-symbols-sharp">cycle</span> Welcome
+        </a>
+        <a onclick="switchSection('inventory')">
           <span class="material-symbols-sharp">inventory_2</span> Inventory Management
         </a>
         <a onclick="switchSection('binder')">
@@ -163,7 +166,26 @@
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
-        <div id="inventory" class="section active">
+        <div id="welcome" class="section active">
+          <div id="welcome-prophecy" class="text-center p-4 bg-dark border border-danger rounded mb-4">
+            <h2 class="text-danger">Welcome, Duelist</h2>
+            <p class="text-light fst-italic">The cards remember your name.</p>
+            <p class="text-light fst-italic">But the deck has already been shuffled.</p>
+            <p class="text-light fst-italic">You were not the first to draw.</p>
+            <p class="text-light fst-italic">You will not be the last to fall.</p>
+            <p class="text-light fst-italic">The Dealer sees all hands.</p>
+            <p class="text-light fst-italic">He forgets only his own.</p>
+            <p class="text-light fst-italic">Thirteen cards form the circle.</p>
+            <p class="text-light fst-italic">Each with a name you once knew.</p>
+            <p class="text-light fst-italic">When the final piece is revealed...</p>
+            <p class="text-light fst-italic">Reality will reshuffle.</p>
+            <p class="text-light fst-italic">Sanity is not a win condition.</p>
+            <p class="text-light fst-italic">Draw wisely, and never pass your turn.</p>
+          </div>
+                
+        </div>
+
+        <div id="inventory" class="section">
           <h1 class="mb-4">Inventory Management</h1>
         
           <!-- Fake Search Bar -->

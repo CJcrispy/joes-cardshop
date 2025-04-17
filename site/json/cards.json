@@ -2,86 +2,120 @@
   {
     "title": "Paladin Hajile",
     "price": "$15.99",
-    "image": "../images/cards/Paladin_Hajile.jpeg"
+    "image": "../images/cards/Paladin_Hajile.jpeg",
+    "type": "Fusion / Warrior / Effect",
+    "text": "Requires 'Crusader Eli' + 1 LIGHT monster. Gains 300 ATK for every card your opponent controls. When this card destroys a monster by battle: Draw 1 card."
   },
   {
     "title": "Sassy Rejection",
     "price": "$39.95",
-    "image": "../images/cards/Sassy_Rejection.jpeg"
+    "image": "../images/cards/Sassy_Rejection.jpeg",
+    "type": "Trap Card",
+    "text": "When your opponent activates a card or effect that targets one of your monsters: Negate it, then destroy that card. Then, sass them into next week."
   },
   {
     "title": "The Solitude of James",
     "price": "$119.00",
-    "image": "../images/cards/The_Solitude_of_James.jpeg"
+    "image": "../images/cards/The_Solitude_of_James.jpeg",
+    "type": "Continuous Spell",
+    "text": "Once per turn: You can skip your Battle Phase. If you do, draw 2 cards. If you control no other monsters, this card cannot be destroyed by effects."
   },
   {
     "title": "Ultra Instinct Eli",
     "price": "$115.49",
-    "image": "../images/cards/Ultra_Instinct_Eli.jpeg"
+    "image": "../images/cards/Ultra_Instinct_Eli.jpeg",
+    "type": "Synchro / Warrior / Effect",
+    "text": "1 Tuner + 1+ non-Tuner monsters. Cannot be targeted by card effects. Once per turn (Quick Effect): Negate any attack or effect and end the Battle Phase."
   },
   {
     "title": "Assimus Maximus",
     "price": "$4.20",
-    "image": "../images/cards/assius_maximus.jfif"
+    "image": "../images/cards/assius_maximus.jfif",
+    "type": "Fusion / Beast / Effect",
+    "text": "Summoned by fusing 'Bubba' with 'Da Foreigner'. Once per turn: You may taunt your opponent. If they laugh, gain 1000 LP."
   },
   {
     "title": "Cardboard Joe",
     "price": "$6.66",
-    "image": "../images/cards/cardboard_joe.jfif"
+    "image": "../images/cards/cardboard_joe.jfif",
+    "type": "Normal Monster",
+    "text": "A hollow replica of a true duelist. Still manages to topdeck like a god."
   },
   {
     "title": "Weegee James",
     "price": "$2.99",
-    "image": "../images/cards/weegeeJames.jfif"
+    "image": "../images/cards/weegeeJames.jfif",
+    "type": "Effect Monster",
+    "text": "Once per turn: You may stare menacingly at your opponent. If they flinch, banish 1 card they control."
   },
   {
     "title": "Snow Bunny Mind Control",
     "price": "$3.50",
-    "image": "../images/cards/sbmc.jfif"
+    "image": "../images/cards/sbmc.jfif",
+    "type": "Spell Card",
+    "text": "Target 1 opponent's monster. Take control of it until the End Phase. If it's wearing a hoodie, keep it."
   },
   {
     "title": "My Oats",
     "price": "$1.89",
-    "image": "../images/cards/oats.jfif"
+    "image": "../images/cards/oats.jfif",
+    "type": "Spell Card",
+    "text": "Gain 1000 LP. If used while hungry, gain an additional 1000 LP."
   },
   {
     "title": "Joe Black",
     "price": "$2.50",
-    "image": "../images/cards/joe_black.jfif"
+    "image": "../images/cards/joe_black.jfif",
+    "type": "Effect Monster",
+    "text": "If this card is Normal or Special Summoned: Add 1 'Corrupted Booster' from your deck to your hand."
   },
   {
     "title": "Limitless Potential",
     "price": "$3.33",
-    "image": "../images/cards/limitless_potential.jfif"
+    "image": "../images/cards/limitless_potential.jfif",
+    "type": "Spell Card",
+    "text": "Target 1 monster you control. Its ATK becomes infinite until the end of this turn. You cannot attack directly this turn."
   },
   {
     "title": "Eli Soul Seal",
     "price": "$5.00",
-    "image": "../images/cards/eli_soul_seal.jfif"
+    "image": "../images/cards/eli_soul_seal.jfif",
+    "type": "Trap Card",
+    "text": "Activate when a monster effect is activated: Banish the activating monster, then inflict 500 damage to your opponent."
   },
   {
     "title": "Dr. Pepper",
     "price": "$1.49",
-    "image": "../images/cards/dr_pepper.jfif"
+    "image": "../images/cards/dr_pepper.jfif",
+    "type": "Equip Spell",
+    "text": "Equip only to a 'Joe' monster. It gains 800 ATK and cannot be put to sleep by card effects."
   },
   {
     "title": "Da Foreigner",
     "price": "$2.25",
-    "image": "../images/cards/DAF.jfif"
+    "image": "../images/cards/DAF.jfif",
+    "type": "Effect Monster",
+    "text": "Once per turn: Reveal your hand. If all cards are foreign-language, draw 2 cards."
   },
   {
     "title": "Bubba",
     "price": "$1.75",
-    "image": "../images/cards/bubba.jfif"
+    "image": "../images/cards/bubba.jfif",
+    "type": "Normal Monster",
+    "text": "A man of few words and powerful memes. Often seen grilling, chilling, or both."
   },
   {
     "title": "60% European",
     "price": "$2.10",
-    "image": "../images/cards/60.jfif"
+    "image": "../images/cards/60.jfif",
+    "type": "Effect Monster",
+    "text": "While on the field: This card is treated as LIGHT, DARK, EARTH, and WATER. Cannot be targeted by non-European monsters."
   },
   {
     "title": "A Momment before disaster",
     "price": "$3.00",
-    "image": "../images/cards/AMBD.jfif"
+    "image": "../images/cards/AMBD.jfif",
+    "type": "Trap Card",
+    "text": "Activate only when your opponent declares an attack. Destroy all monsters on the field. Then, sigh dramatically."
   }
 ]
