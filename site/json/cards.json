@@ -1,88 +1,87 @@
 [
-    {
-      "title": "Paladin Hajile",
-      "price": "200.00 TK",
-      "image": "../images/cards/Paladin_Hajile.jpeg"
-    },
-    {
-      "title": "MAYORAL KOŠULJA",
-      "price": "800 TK",
-      "image": "../images/cards/Sassy_Rejection.jpeg"
-    },
-    {
-      "title": "PANTALONE TERI 2",
-      "price": "4000.00 TK",
-      "image": "../images/cards/The_Solitude_of_James.jpeg"
-    },
-    {
-      "title": "CVETNA HALJINA",
-      "price": "4000.00 RSD",
-      "image": "../images/cards/Ultra_Instinct_Eli.jpeg"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/assius_maximus.jfif"
-    },
-    {
-      "title": "MAJICA MAYORAL",
-      "price": "100.00 TK",
-      "image": "../images/cards/cardboard_joe.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/weegeeJames.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/sbmc.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/oats.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/joe_black.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/limitless_potential.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/eli_soul_seal.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/dr_pepper.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/DAF.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/bubba.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/60%.jfif"
-    },
-    {
-      "title": "MAJICA FOTO",
-      "price": "40.00 TK",
-      "image": "../images/cards/AMBD.jfif"
-    }
-  ]
-  
+  {
+    "title": "Paladin Hajile",
+    "price": "$15.99",
+    "image": "../images/cards/Paladin_Hajile.jpeg"
+  },
+  {
+    "title": "Sassy Rejection",
+    "price": "$39.95",
+    "image": "../images/cards/Sassy_Rejection.jpeg"
+  },
+  {
+    "title": "The Solitude of James",
+    "price": "$119.00",
+    "image": "../images/cards/The_Solitude_of_James.jpeg"
+  },
+  {
+    "title": "Ultra Instinct Eli",
+    "price": "$115.49",
+    "image": "../images/cards/Ultra_Instinct_Eli.jpeg"
+  },
+  {
+    "title": "Assimus Maximus",
+    "price": "$4.20",
+    "image": "../images/cards/assius_maximus.jfif"
+  },
+  {
+    "title": "Cardboard Joe",
+    "price": "$6.66",
+    "image": "../images/cards/cardboard_joe.jfif"
+  },
+  {
+    "title": "Weegee James",
+    "price": "$2.99",
+    "image": "../images/cards/weegeeJames.jfif"
+  },
+  {
+    "title": "Snow Bunny Mind Control",
+    "price": "$3.50",
+    "image": "../images/cards/sbmc.jfif"
+  },
+  {
+    "title": "My Oats",
+    "price": "$1.89",
+    "image": "../images/cards/oats.jfif"
+  },
+  {
+    "title": "Joe Black",
+    "price": "$2.50",
+    "image": "../images/cards/joe_black.jfif"
+  },
+  {
+    "title": "Limitless Potential",
+    "price": "$3.33",
+    "image": "../images/cards/limitless_potential.jfif"
+  },
+  {
+    "title": "Eli Soul Seal",
+    "price": "$5.00",
+    "image": "../images/cards/eli_soul_seal.jfif"
+  },
+  {
+    "title": "Dr. Pepper",
+    "price": "$1.49",
+    "image": "../images/cards/dr_pepper.jfif"
+  },
+  {
+    "title": "Da Foreigner",
+    "price": "$2.25",
+    "image": "../images/cards/DAF.jfif"
+  },
+  {
+    "title": "Bubba",
+    "price": "$1.75",
+    "image": "../images/cards/bubba.jfif"
+  },
+  {
+    "title": "60% European",
+    "price": "$2.10",
+    "image": "../images/cards/60.jfif"
+  },
+  {
+    "title": "A Momment before disaster",
+    "price": "$3.00",
+    "image": "../images/cards/AMBD.jfif"
+  }
+]

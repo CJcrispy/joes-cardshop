@@ -209,21 +209,22 @@ function getCorruptedCards() {
 const puzzleRewardMap = {
   indexPuzzle: ["Booster #001"],
   aboutPagePuzzle: ["Booster #002"],
-  catalogPuzzle: ["Booster #003"],
-  dashboardPuzzle: ["Booster #004"],
-  hiddenPuzzle1: ["Booster #005"],
-  hiddenPuzzle2: ["Booster #006"],
-  bonusChallenge: ["Booster #002", "Booster #003"] // ⬅ multiple rewards
+  catalogPuzzle: ["Booster #003", "Booster #004"],
+  dashboardPuzzle: ["Booster #005", "Booster #006"],
+  hiddenPuzzle1: ["Booster #007"],
+  hiddenPuzzle2: ["Booster #008"],
 };
 
 
 const boosterCardMap = {
   'Booster #001': ["The Dealer", "Cold Pull"],
   'Booster #002': ["Cult of E Initiation", "Shuffle the Self"],
-  'Booster #003': ["The Mulligan Curse", "Deck of the Damned", "Side Deck Ritual"],
-  'Booster #004': ["Game Loss (Unexplained)", "Decklist of Flesh", "Draw Phase (Endless)"],
-  'Booster #005': ["Exodia, the Forbidden Truth"],
-  'Booster #006': ["Dealer’s Choice", "The Empty Sleeve"]
+  'Booster #003': ["The Mulligan Curse"],
+  'Booster #004': ["Deck of the Damned", "Side Deck Ritual"],
+  'Booster #005': ["Game Loss (Unexplained)", "Decklist of Flesh",],
+  'Booster #006': ["Draw Phase (Endless)"],
+  'Booster #007': ["Exodia, the Forbidden Truth"],
+  'Booster #008': ["Dealer’s Choice", "The Empty Sleeve"],
 };
 
 const corruptedCardImages = {
@@ -492,19 +493,19 @@ document.head.appendChild(style);
 
 function renderMessages() {
   const messages = [
-    { id: 1, title: "Message 1", text: "I love this shop. Every morning I open the register, smell the booster packs, and think: 'This is it. My little kingdom.'" },
-    { id: 2, title: "Message 2", text: "A pack came in today that wasn’t from any set I’ve seen. No barcode. No branding. Just… foil. It gave me the chills." },
-    { id: 3, title: "Message 3", text: "One of the kids opened the foil pack. Then he wasn’t here. Just… gone. Security camera shows him standing still for 4 minutes, then static." },
-    { id: 4, title: "Message 4", text: "I stayed up last night cataloging the inserts. Half of them aren’t printed in English. Some are symbols. One looks like a summoning circle." },
-    { id: 5, title: "Message 5", text: "There are gaps in my memory. Logs I don’t remember writing. A camera feed that loops with no start or end. I think the cards are watching." },
-    { id: 6, title: "Message 6", text: "They called it a side deck ritual. 13 cards, arranged in order, chanted over with a player’s name. That’s when I heard the voice." },
-    { id: 7, title: "Message 7", text: "I found something in the back room. It wasn't there before. A symbol burned into the wall. An eye, with a crown of cards around it." },
-    { id: 8, title: "Message 8", text: "LOG 8 - TERMINAL CAPTURE: // 04:11:14 AM // I see a player again. Same face. Every feed. Every pack. They aren’t customers. They are pieces." },
-    { id: 9, title: "Message 9", text: "I made a deck of names. Every customer who pulled a corrupted card. I added myself. I think it’s already shuffled." },
-    { id: 10, title: "Message 10", text: "Draw Phase. It won’t end. The screen blinks, then I see my own hand drawing a card. But I’m not moving." },
-    { id: 11, title: "Message 11", text: "‘E’ is real. It’s the entity behind the shuffle. It deals reality itself, one card at a time." },
-    { id: 12, title: "Message 12", text: "I found the final card. My name was already written on it." },
-    { id: 13, title: "Message 13", text: "..." }
+    { id: 1, title: "Message 1", text: "It still doesn’t feel real.\nI used to dream about this—my own shop, walls lined with boosters, regulars hanging around the counter, late night tourneys that end in laughter.\nWhen the distributor reached out about the Cult of E promo set, I thought it was a prank. But I’m holding one now. Shrink-wrapped. Unlisted anywhere.\nI’ve always loved being the one to deal the hand. I never thought I’d be dealt one like this." },
+    { id: 2, title: "Message 2", text: "Strange booster today. Not from my usual supply.\nNo branding. Just a white wrapper with “E” printed in silver foil.\nGave one to Mikey, the kid who hangs around after school. He tore it open, pulled a card—“Cold Pull”—and laughed. A second later, the lights flickered.\nWhen they came back on, he was gone.\nI told myself he ran out. I even charged the pack to his account.\nBut when I checked the cameras…\nHe never left." },
+    { id: 3, title: "Message 3", text: "There was a note inside the next booster.\nHandwritten. Folded under the rules insert. It just said:\n“Only the Dealer may reveal E.”\nBelow that:\n Send 3 Friends from hand to the Graveyard. Special Summon 1 E-Touched Token.\nThis wasn’t flavor text. It was an instruction. A ritual.\nThat night, I dreamed of players kneeling in a circle of cards. Their decks burned.\nThe one in the center wore my apron." },
+    { id: 4, title: "Message 4", text: "Log #048 — Mirror Test\nI saw myself in the bathroom mirror. Same clothes. Same scar above the lip.\nBut the smile was… wrong.\nI raised my hand. The reflection lagged.\nLater, I found Shuffle the Self in the cash drawer.\n Effect: Target 1 card. Shuffle it into the Deck. Forget what it was.\nI think it’s working. I’ve been forgetting more. My name, sometimes. Where I parked.\nI keep trying to leave. I keep waking up behind the counter." },
+    { id: 5, title: "Message 5", text: "Log #065 — Restart\nThere’s something in the loop.\nI’ve spoken to people who don’t exist. Filed sales for customers I can’t verify. When I ask others about them, they just shrug.\nI found a card called The Mulligan Curse.\n Effect: You may restart the game. You will not remember doing so.\nBut I do remember.\nI’ve restarted. I’ve seen this message before.\nEvery time I think I’m done, I find a new pack waiting for me at the register.\nI don’t think I’m the one drawing anymore." },
+    { id: 6, title: "Message 6", text: "Log #074 — Audible\nThe cards whisper now. Not all of them. Just the ones from the E set.\nI drew Deck of the Damned during a solo test game. My ears started ringing.\nIf this card is drawn, you must play it. Lose 500 Sanity.\nFunny. Sanity isn’t a game mechanic. Not in any version of the rules.\nI lost time. Hours. Found myself standing in the storeroom, clutching the card.\nIt’s still warm." },
+    { id: 7, title: "Message 7", text: "Log #088 — Insert Text\nI took apart another booster. Inside was a guide. Looked like a normal rule insert, but at the bottom… there were extra instructions.\nSend 13 cards from your side deck to the Other Zone. Summon E.\nThe Other Zone.\nI don’t know what it is. But I think I’ve been there. When I dream, I’m seated at a long table surrounded by players with blank faces. A Dealer stands behind me.\nHe leans forward and says: “Keep drawing.”\nAnd so I do." },
+    { id: 8, title: "Message 8", text: "Log #097 — Error Report\nJacob—another regular—was in the store Thursday evening. Bought a Cult of E pack. I rang him up, turned around to grab a promo card, and…\nHe was gone.\nNo door. No bell.\nI checked the security feed: he draws a card, freezes, and then the footage skips. One frame he’s there. Next, empty chair.\nI tried to rewind, but the file corrupted. Playback ends with static and one phrase:\nThat player loses. No reason is given." },
+    { id: 9, title: "Message 9", text: "Log #103 — Names\nThe cards want names.\nNot attributes. Not types or rarities. Names.\nI started writing them. First on the sleeves. Then on the cards themselves.\nCustomers. Family. Mine.\nI thought it would stop. That naming them would give me control.\nBut now the cards write back. I opened a fresh booster and inside was a card I never made—my name already printed on it.\nI was in the side deck." },
+    { id: 10, title: "Message 10", text: "Log #122 — Final Draw\nI haven’t slept. Haven’t stopped drawing.\nEvery card is the same now. My reflection. My thoughts. My name.\nThe draw phase won’t end.\nYour Draw Phase does not end. Draw until reality cracks.\nReality’s cracking. I can see the gaps. See the cultists watching from the Other Zone. See myself.\nJust one more card. Just one more.\n[ERROR: LOG FRAGMENTED. RESUME FROM TOP? Y/N]" },
+    { id: 11, title: "Message 11", text: "Log #135 — Scripture of the Fifth Piece\nPiece 1: The Shuffle of Self. Identity must be undone.\nPiece 2: The Dealer’s Choice. The illusion of agency.\nPiece 3: Decklist of Flesh. The names you abandon.\nPiece 4: Draw Phase (Endless). Until you break.\nPiece 5: ???\nWhen you hold all five, you do not win. You are seen.\nThe cards are not cardboard. They are keys.\nE is not summoned.\nE is revealed." },
+    { id: 12, title: "Message 12", text: "Log #144 — [Unstable Entry]\nI shuffled the customers.\nI sacrificed the regulars.\nI drew myself.\nThey left me the final card. It whispered. It asked.\n“Choose 1: Join the Cult. Erase all decks. No reprints.”\nI chose.\nI erased the decks.\nI erased the decks.\nI erased the decks.\nI erased the—\n[LOG TERMINATED]" },
+    { id: 13, title: "Message 13", text: "Log #?? — No Title\n[File recovered from corrupted node. No metadata.]\nI opened a pack today.\nIt was empty.\nNo card. No sleeve. Just dust.\nBut something changed. I looked around the shop and everything felt… paused.\nI think I finished the game. Or maybe I was never playing.\nThe register is still on. The lights still buzz.\nI left the door unlocked.\nIf you’re reading this…\nDeal the next hand." }
   ];
 
   const requiredCards = [
@@ -712,6 +713,21 @@ function runAboutPagePuzzle() {
     contactBtn.classList.add("btn-outline-danger");
     contactBtn.textContent = "Do Not Contact";
   }
+
+
+  // Cult Whisper
+  console.log(
+    "%cThe Dealer speaks:",
+    "color: #e91e63; font-weight: bold; font-size: 14px;"
+  );
+  console.log(
+    "%c\"Memory is the test. Most will forget. The worthy will find the path.\"",
+    "color: #ccc; font-style: italic;"
+  );
+  console.log(
+    "%c>> /rituals/memory_test.html",
+    "color: #0ff; font-family: monospace;"
+  );
 }
 
 function whisperToDealer(code) {
@@ -917,8 +933,11 @@ function runFinaleSection() {
 function chooseFinale(choice) {
   if (choice === 'save') {
     alert("🌄 You cleanse the binder. Joe returns, different... but free.");
+    window.location.href = "../pages/finale.html";
   } else if (choice === 'cult') {
     alert("👁 You accept the final card. Your name joins the Deck of Flesh.");
+
+    window.location.href = "../pages/join_cult.html";
   }
 }
 

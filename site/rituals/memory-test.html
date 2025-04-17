@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hidden Puzzle 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      color: #eee;
+      font-family: 'Coda', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .deck {
+      width: 640px;
+      background: #111;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255, 0, 77, 0.3);
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      justify-items: center;
+    }
+    .card {
+      height: 100px;
+      width: 100px;
+      background: #222;
+      color: #fff;
+      font-size: 0;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transform: rotateY(180deg);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease, background 0.2s;
+      line-height: 100px;
+      border: 1px solid #333;
+    }
+    .card.open {
+      transform: rotateY(0);
+      background: #5e1979;
+      cursor: default;
+      font-size: 40px;
+    }
+    .card.match {
+      background: #2ecc71;
+      border-color: #27ae60;
+      font-size: 40px;
+    }
+    .card.notmatch {
+      background: #c0392b;
+      border-color: #e74c3c;
+    }
+    .reset-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #5e1979;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .reset-btn:hover {
+      background: #8428aa;
+    }
+    #timer {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #ff4477;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck"></div>
+  <div id="timer">Time Remaining: <span id="time-left">60</span>s</div>
+  <button class="reset-btn" onclick="initGame()">Reset</button>
+
+  <script>
+    const symbols = [
+      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask',
+      'leaf', 'bomb', 'star', 'heart', 'ghost', 'gem', 'feather', 'skull', 'eye', 'flask'
+    ].map(icon => `<i class="fas fa-${icon}"></i>`);
+
+    let opened = [], matched = 0;
+    const deck = document.getElementById('deck');
+
+    function shuffle(array) {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+
+    function startTimer(duration) {
+        clearInterval(timerInterval);
+        let timeLeft = duration;
+        timeLeftDisplay.textContent = timeLeft;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timeLeftDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            Swal.fire({
+                title: `Time's Up!`,
+                text: 'The cards fade into shadow. You failed to complete the puzzle.',
+                icon: 'error',
+                confirmButtonColor: '#5e1979'
+            });
+            }
+        }, 1000);
+        }
+
+
+    function initGame() {
+      deck.innerHTML = '';
+      matched = 0;
+      opened = [];
+      const cards = shuffle([...symbols]);
+      cards.forEach(sym => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.symbol = sym;
+        card.addEventListener('click', handleCardClick);
+        deck.appendChild(card);
+      });
+      startTimer(60);
+    }
+
+    function handleCardClick(e) {
+      const card = e.currentTarget;
+      if (card.classList.contains('open') || card.classList.contains('match') || opened.length === 2) return;
+
+      card.innerHTML = card.dataset.symbol;
+      card.classList.add('open');
+      opened.push(card);
+
+      if (opened.length === 2) {
+        const [first, second] = opened;
+        if (first.dataset.symbol === second.dataset.symbol) {
+          first.classList.add('match');
+          second.classList.add('match');
+          matched++;
+          if (matched === symbols.length / 2) {
+            setTimeout(() => {
+              Swal.fire({
+                title: 'Puzzle Solved',
+                text: 'The deck whispers approval... Hidden Puzzle 2 is complete.',
+                icon: 'success',
+                confirmButtonColor: '#5e1979'
+              });
+              sessionStorage.setItem('puzzle_hidden2', 'complete');
+            }, 500);
+          }
+        } else {
+          first.classList.add('notmatch');
+          second.classList.add('notmatch');
+          setTimeout(() => {
+            first.classList.remove('open', 'notmatch');
+            second.classList.remove('open', 'notmatch');
+            first.innerHTML = '';
+            second.innerHTML = '';
+          }, 800);
+        }
+        opened = [];
+      }
+    }
+
+    initGame();
+  </script>
+</body>
+</html>
