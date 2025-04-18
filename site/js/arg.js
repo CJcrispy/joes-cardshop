@@ -779,8 +779,8 @@ function runCatalogPuzzle() {
   grid.id = 'catalogPuzzleGrid';
   grid.className = 'row row-cols-2 row-cols-md-4 g-4 justify-content-center';
 
-  const correctPhrase = ["Seek", "The", "Truth", "Buried", "Beneath", "Hollow", "Hands", "And", "Follow", "Eternal", "Whispers", "Into", "Silence"];
-  const decoys = ["Card", "Order", "Matters", "Here"];
+  const correctPhrase = ["Seek", "The", "Truth"];
+  const decoys = ["Card", "Order", "Matters", "Here", "Buried", "Beneath", "Hollow", "Hands", "And", "Follow", "Eternal", "Whispers", "Into", "Silence"];
   const allWords = [...correctPhrase, ...decoys].sort(() => Math.random() - 0.5);
 
   let playerInput = [...getProgress().catalogPuzzleSolvedOrder || []];
