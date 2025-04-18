@@ -739,15 +739,15 @@ window.HEEDTHEDEALER = () => whisperToDealer("HEEDTHEDEALER");
 function runCatalogPuzzle() {
   // Cult Whisper
   console.log(
-    "%cThe Dealer speaks:",
+    "%cThe Dealer speaks: 3 words",
     "color: #e91e63; font-weight: bold; font-size: 14px;"
   );
   console.log(
-    "%c\"Memory is the test. Most will forget. The worthy will find the path.\"",
+    "%c\"Hidden: Memory is the test. Most will forget. The worthy will find the path.\"",
     "color: #ccc; font-style: italic;"
   );
   console.log(
-    "%c>> /rituals/memory-test.html",
+    "%c>> Hidden: /rituals/memory-test.html",
     "color: #0ff; font-family: monospace;"
   );
 
